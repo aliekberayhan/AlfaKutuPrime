@@ -1,0 +1,222 @@
+<p-toolbar styleClass="mb-6">
+    <ng-template #start>
+        <!-- JSON okuma ekranı read-only ise NEW/DELETE'i kaldır.
+         Kalsın istiyorsan aşağıdaki gibi bırakıyorum. -->
+        <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+        <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()"
+            [disabled]="!selectedProducts || !selectedProducts.length" />
+    </ng-template>
+
+    <ng-template #end>
+        <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()" />
+    </ng-template>
+</p-toolbar>
+
+<p-table #dt [value]="products()" [rows]="10" [paginator]="true" [rowHover]="true" [(selection)]="selectedProducts"
+    dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [rowsPerPageOptions]="[10, 20, 30]"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records" [showCurrentPageReport]="true"
+    [globalFilterFields]="['id','karantinaGiris','karantinaCikis','isemriNo','isIstasyonuNo','isIstasyonuAdi','code','name','ekipmanNo','miktar','redMiktar','planFisRef','description']">
+    <ng-template #caption>
+        <div class="flex items-center justify-between">
+            <h5 class="m-0">Üretim Fişleri</h5>
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Ara..." />
+            </p-iconfield>
+        </div>
+    </ng-template>
+
+    <ng-template #header>
+        <tr>
+            <th style="width: 3rem">
+                <p-tableHeaderCheckbox />
+            </th>
+
+            <th pSortableColumn="id" style="min-width: 12rem">
+                Fiş No
+                <p-sortIcon field="id" />
+            </th>
+
+            <th pSortableColumn="karantinaGiris" style="min-width: 12rem">
+                Karantina Giriş
+                <p-sortIcon field="karantinaGiris" />
+            </th>
+
+            <th pSortableColumn="karantinaCikis" style="min-width: 12rem">
+                Karantina Çıkış
+                <p-sortIcon field="karantinaCikis" />
+            </th>
+
+            <th pSortableColumn="isemriNo" style="min-width: 14rem">
+                İşemri No
+                <p-sortIcon field="isemriNo" />
+            </th>
+
+            <th pSortableColumn="isIstasyonuNo" style="min-width: 12rem">
+                İş İstasyonu
+                <p-sortIcon field="isIstasyonuNo" />
+            </th>
+
+            <th pSortableColumn="isIstasyonuAdi" style="min-width: 18rem">
+                İş İstasyonu Adı
+                <p-sortIcon field="isIstasyonuAdi" />
+            </th>
+
+            <th pSortableColumn="code" style="min-width: 12rem">
+                Stok No
+                <p-sortIcon field="code" />
+            </th>
+
+            <th pSortableColumn="name" style="min-width: 18rem">
+                Stok Adı
+                <p-sortIcon field="name" />
+            </th>
+
+            <th pSortableColumn="ekipmanNo" style="min-width: 12rem">
+                Ekipman No
+                <p-sortIcon field="ekipmanNo" />
+            </th>
+
+            <th pSortableColumn="miktar" style="min-width: 8rem">
+                Miktar
+                <p-sortIcon field="miktar" />
+            </th>
+
+            <th pSortableColumn="redMiktar" style="min-width: 8rem">
+                Red Miktar
+                <p-sortIcon field="redMiktar" />
+            </th>
+
+            <th pSortableColumn="planFisRef" style="min-width: 12rem">
+                Plan Fiş Referansı
+                <p-sortIcon field="planFisRef" />
+            </th>
+
+            <th style="min-width: 16rem">Açıklama</th>
+
+            <th style="min-width: 10rem"></th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-product>
+        <tr>
+            <td style="width: 3rem">
+                <p-tableCheckbox [value]="product" />
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.id }}
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.karantinaGiris | date:'short' }}
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.karantinaCikis }}
+            </td>
+
+            <td style="min-width: 14rem">
+                {{ product.isemriNo }}
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.isIstasyonuNo }}
+            </td>
+
+            <td style="min-width: 18rem">
+                {{ product.isIstasyonuAdi }}
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.code }}
+            </td>
+
+            <td style="min-width: 18rem">
+                {{ product.name }}
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.ekipmanNo }}
+            </td>
+
+            <td style="min-width: 8rem">
+                {{ product.miktar }}
+            </td>
+
+            <td style="min-width: 8rem">
+                {{ product.redMiktar }}
+            </td>
+
+            <td style="min-width: 12rem">
+                {{ product.planFisRef }}
+            </td>
+
+            <td style="min-width: 16rem" class="truncate max-w-[16rem]" [title]="product.description">
+                {{ product.description }}
+            </td>
+
+            <td style="min-width: 10rem">
+                <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+                    (click)="editProduct(product)" />
+                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                    (click)="deleteProduct(product)" />
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="productDialog" [style]="{ width: '520px' }" header="Fiş Detayı" [modal]="true">
+    <ng-template #content>
+        <div class="flex flex-col gap-4">
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-6">
+                    <label class="block font-bold mb-2">Fiş No</label>
+                    <input pInputText [(ngModel)]="product.id" fluid />
+                </div>
+
+                <div class="col-span-6">
+                    <label class="block font-bold mb-2">Stok No</label>
+                    <input pInputText [(ngModel)]="product.code" fluid />
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">Stok Adı</label>
+                <input pInputText [(ngModel)]="product.name" fluid />
+                <small class="text-red-500" *ngIf="submitted && !product.name">Stok adı zorunlu.</small>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">İstasyon</label>
+                <input pInputText [(ngModel)]="product.category" fluid />
+            </div>
+
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-6">
+                    <label class="block font-bold mb-2">Miktar</label>
+                    <p-inputnumber [(ngModel)]="product.quantity" fluid />
+                </div>
+
+                <div class="col-span-6">
+                    <label class="block font-bold mb-2">Durum</label>
+                    <!-- optionValue kesinlikle 'value' olmalı; sende demo'da label'a bağlamışlar -->
+                    <p-select [(ngModel)]="product.inventoryStatus" [options]="statuses" optionLabel="label"
+                        optionValue="value" placeholder="Seçiniz" [appendTo]="'body'" fluid />
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold mb-2">Detay</label>
+                <textarea pTextarea [(ngModel)]="product.description" rows="3" fluid></textarea>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="Save" icon="pi pi-check" (click)="saveProduct()" />
+    </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
