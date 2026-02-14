@@ -3,7 +3,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
-import {AppFloatingConfigurator} from "@/app/layout/component/app.floatingconfigurator";
+import { AppFloatingConfigurator } from "@/app/layout/component/app.floatingconfigurator";
 
 @Component({
     selector: 'topbar-widget',
@@ -47,5 +47,5 @@ import {AppFloatingConfigurator} from "@/app/layout/component/app.floatingconfig
         </div> `
 })
 export class TopbarWidget {
-    constructor(public router: Router) {}
+    constructor(public router: Router) { }
 }
