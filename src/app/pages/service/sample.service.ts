@@ -17,6 +17,8 @@ export interface SampleRequest {
   createdAt: string;
   status: SampleStatus;
   notes: SampleNote[];
+  productCode?: string;
+  quantity?: number;
 }
 
 const STORAGE_KEY = 'sample_requests_v1';
@@ -27,6 +29,11 @@ export class SampleService {
 
   getAll() {
     return this.items$.asObservable();
+  }
+
+  // synchronous snapshot (helpers for UI updates)
+  getSnapshot(): SampleRequest[] {
+    return this.items$.getValue();
   }
 
   create(request: Omit<SampleRequest, 'id' | 'createdAt'>) {

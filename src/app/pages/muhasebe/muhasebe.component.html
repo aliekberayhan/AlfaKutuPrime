@@ -14,6 +14,7 @@
       <th>Customer</th>
       <th>Created</th>
       <th>Status</th>
+      <th>Product</th>
       <th>Notes</th>
       <th></th>
     </tr>
@@ -24,12 +25,24 @@
       <td>{{r.customerUser}}</td>
       <td>{{r.createdAt | date:'short'}}</td>
       <td>{{r.status}}</td>
+      <td>{{r.productCode}} ({{r.quantity}})</td>
       <td>{{r.notes.length}}</td>
       <td>
         <p-button icon="pi pi-pencil" (click)="setInAccounting(r)"></p-button>
-        <p-button icon="pi pi-plus" (click)="addNote(r)"></p-button>
+        <p-button icon="pi pi-plus" (click)="openNoteDialog(r)"></p-button>
       </td>
     </tr>
   </ng-template>
 </p-table>
+
+<p-dialog header="Add Note" [(visible)]="noteDialog" [modal]="true" [style]="{ width: 'auto' }">
+  <div class="p-fluid">
+    <label class="block font-bold mb-2">Note</label>
+    <textarea pInputTextarea rows="4" [(ngModel)]="noteText"></textarea>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" text (click)="noteDialog=false"></p-button>
+    <p-button label="Add" icon="pi pi-plus" (onClick)="confirmAddNote()"></p-button>
+  </ng-template>
+</p-dialog>
 

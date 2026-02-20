@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SampleService, SampleRequest, SampleNote } from '../service/sample.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,12 +13,15 @@ import { AuthService } from '../../auth/auth.service';
 @Component({
   selector: 'app-kalite',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule],
   providers: [MessageService],
   templateUrl: './kalite.component.html'
 })
 export class KaliteComponent implements OnInit {
   requests: SampleRequest[] = [];
+  noteDialog = false;
+  selected?: SampleRequest;
+  noteText = '';
 
   constructor(private svc: SampleService, private msg: MessageService, private auth: AuthService) {}
 
@@ -33,11 +37,23 @@ export class KaliteComponent implements OnInit {
   }
 
   addNote(r: SampleRequest) {
-    const text = prompt('Note');
-    if (!text) return;
-    const note: SampleNote = { author: this.auth.getCurrentUserSync()?.userName ?? 'kalite', role: 'Kalite', text, time: new Date().toISOString() };
-    this.svc.addNote(r.id, note);
-    this.msg.add({ severity: 'success', summary: 'Note added', detail: `Note added to ${r.id}` });
+    this.openNoteDialog(r);
+  }
+
+  openNoteDialog(r: SampleRequest) {
+    this.selected = r;
+    this.noteText = '';
+    this.noteDialog = true;
+  }
+
+  confirmAddNote() {
+    if (!this.selected || !this.noteText?.trim()) return;
+    const note: SampleNote = { author: this.auth.getCurrentUserSync()?.userName ?? 'kalite', role: 'Kalite', text: this.noteText, time: new Date().toISOString() };
+    this.svc.addNote(this.selected.id, note);
+    this.msg.add({ severity: 'success', summary: 'Note added', detail: `Note added to ${this.selected.id}` });
+    const updated = this.svc.getSnapshot().find(i => i.id === this.selected?.id);
+    if (updated) this.selected = updated;
+    this.noteDialog = false;
   }
 }
 

@@ -27,14 +27,40 @@
   </ng-template>
 </p-table>
 
-<p-dialog header="New Sample Request" [(visible)]="dialog" [modal]="true">
+<p-dialog header="New Sample Request" [(visible)]="dialog" [modal]="true" [style]="{ width: 'auto' }">
   <div class="p-fluid">
-    <label>Title</label>
+    <label class="block font-bold mb-2">Title</label>
     <input pInputText [(ngModel)]="title" />
+
+    <label class="block font-bold mb-2">Product Code</label>
+    <input pInputText [(ngModel)]="productCode" />
+
+    <label class="block font-bold mb-2">Quantity</label>
+    <input pInputText type="number" [(ngModel)]="quantity" />
   </div>
   <ng-template pTemplate="footer">
     <p-button label="Cancel" (onClick)="dialog=false" />
     <p-button label="Create" (onClick)="create()" />
   </ng-template>
+</p-dialog>
+
+<!-- View / Notes dialog -->
+<p-dialog header="Request Details" [(visible)]="viewDialog" [modal]="true" [style]="{ width: '640px' }">
+  <div *ngIf="selected">
+    <p><strong>Id:</strong> {{selected.id}}</p>
+    <p><strong>Product:</strong> {{selected.productCode}} ({{selected.quantity}})</p>
+    <p><strong>Status:</strong> {{selected.status}}</p>
+    <p><strong>Notes:</strong></p>
+    <ul>
+      <li *ngFor="let n of selected.notes">{{n.time | date:'short'}} — <strong>{{n.author}}</strong>: {{n.text}}</li>
+    </ul>
+    <div class="mt-4">
+      <label class="block font-bold mb-2">Add note</label>
+      <textarea pInputTextarea [(ngModel)]="noteText" rows="3"></textarea>
+      <div class="mt-2">
+        <p-button label="Add" icon="pi pi-plus" (onClick)="addNoteToSelected()"></p-button>
+      </div>
+    </div>
+  </div>
 </p-dialog>
 
