@@ -1,0 +1,40 @@
+<p-toolbar styleClass="mb-6">
+  <ng-template #start>
+    <p-button label="New Request" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+  </ng-template>
+</p-toolbar>
+
+<p-table #dt [value]="requests" [rows]="10" [paginator]="true" [rowHover]="true" dataKey="id">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Id</th>
+      <th>Created</th>
+      <th>Status</th>
+      <th>Notes</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-r>
+    <tr>
+      <td>{{r.id}}</td>
+      <td>{{r.createdAt | date:'short'}}</td>
+      <td>{{r.status}}</td>
+      <td>{{r.notes.length}}</td>
+      <td>
+        <p-button icon="pi pi-eye" (click)="view(r)"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog header="New Sample Request" [(visible)]="dialog" [modal]="true">
+  <div class="p-fluid">
+    <label>Title</label>
+    <input pInputText [(ngModel)]="title" />
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" (onClick)="dialog=false" />
+    <p-button label="Create" (onClick)="create()" />
+  </ng-template>
+</p-dialog>
+

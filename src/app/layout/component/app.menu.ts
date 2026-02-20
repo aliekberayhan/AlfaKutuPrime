@@ -61,6 +61,31 @@ export class AppMenu implements OnInit, OnDestroy {
                         routerLink: ['/pages/fisler'],
                         permission: 'Fis.View'
                     }
+                    ,
+                    {
+                        label: 'Customer Samples',
+                        icon: 'pi pi-fw pi-file',
+                        routerLink: ['/pages/customer-samples'],
+                        permission: 'Samples.Create'
+                    },
+                    {
+                        label: 'Muhasebe',
+                        icon: 'pi pi-fw pi-money-bill',
+                        routerLink: ['/pages/muhasebe'],
+                        permission: 'Samples.Manage'
+                    },
+                    {
+                        label: 'Numune Talebi',
+                        icon: 'pi pi-fw pi-check-circle',
+                        routerLink: ['/pages/kalite-samples'],
+                        permission: 'Kalite.View'
+                    },
+                    {
+                        label: 'Customers',
+                        icon: 'pi pi-fw pi-check-circle',
+                        routerLink: ['/pages/customers'],
+                        permission: 'Customer.View'
+                    }
                 ]
             },
             {

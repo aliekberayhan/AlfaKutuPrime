@@ -1,0 +1,15 @@
+<p-toolbar styleClass="mb-6">
+  <ng-template #start>
+    <h5>Müşteriler</h5>
+  </ng-template>
+</p-toolbar>
+
+<p-table [value]="customers" [rows]="10" [paginator]="true" [rowHover]="true">
+  <ng-template pTemplate="header">
+    <tr><th>Username</th><th>Roles</th></tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-c>
+    <tr><td>{{c.userName}}</td><td>{{c.roles.join(', ')}}</td></tr>
+  </ng-template>
+</p-table>
+
