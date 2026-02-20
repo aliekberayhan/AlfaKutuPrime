@@ -1,7 +1,5 @@
 <p-toolbar styleClass="mb-6">
     <ng-template #start>
-        <!-- JSON okuma ekranı read-only ise NEW/DELETE'i kaldır.
-         Kalsın istiyorsan aşağıdaki gibi bırakıyorum. -->
         <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
         <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()"
             [disabled]="!selectedProducts || !selectedProducts.length" />
@@ -200,7 +198,6 @@
 
                 <div class="col-span-6">
                     <label class="block font-bold mb-2">Durum</label>
-                    <!-- optionValue kesinlikle 'value' olmalı; sende demo'da label'a bağlamışlar -->
                     <p-select [(ngModel)]="product.inventoryStatus" [options]="statuses" optionLabel="label"
                         optionValue="value" placeholder="Seçiniz" [appendTo]="'body'" fluid />
                 </div>

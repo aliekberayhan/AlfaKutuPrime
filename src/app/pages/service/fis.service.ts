@@ -63,7 +63,7 @@ export class FisService {
   }
 
   getProducts() {
-    return this.loadFromStatic();
+    return this.loadFromApi().catch(() => this.loadFromStatic());
   }
 
   private async loadFromJson(): Promise<Product[]> {
@@ -92,6 +92,15 @@ export class FisService {
   private async loadFromStatic(): Promise<Product[]> {
     const rows = URETIM_FIS;
     return rows.map(r => this.mapToProduct(r));
+  }
+
+  private async loadFromApi(): Promise<Product[]> {
+    try {
+      const rows = await firstValueFrom(this.http.get<UretimFisDto[]>('/api/fis'));
+      return (rows ?? []).map(r => this.mapToProduct(r as any));
+    } catch {
+      return this.loadFromStatic();
+    }
   }
 
   private mapToProduct(r: UretimFisDto): Product {

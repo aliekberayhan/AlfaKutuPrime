@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { AuthService } from '../../auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-menu',
@@ -18,35 +20,19 @@ import { AppMenuitem } from './app.menuitem';
         }
     </ul> `,
 })
-export class AppMenu {
+export class AppMenu implements OnInit, OnDestroy {
     model: MenuItem[] = [];
+    private fullModel: MenuItem[] = [];
+    private sub?: Subscription;
+
+    constructor(private auth: AuthService) {}
 
     ngOnInit() {
-        this.model = [
+        this.fullModel = [
             {
                 label: 'Home',
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
             },
-            // {
-            //     label: 'UI Components',
-            //     items: [
-            //         { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-            //         { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-            //         { label: 'Button', icon: 'pi pi-fw pi-mobile', class: 'rotated-icon', routerLink: ['/uikit/button'] },
-            //         { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-            //         { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-            //         { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-            //         { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-            //         { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-            //         { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-            //         { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'] },
-            //         { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-            //         { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-            //         { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-            //         { label: 'Timeline', icon: 'pi pi-fw pi-calendar', routerLink: ['/uikit/timeline'] },
-            //         { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
-            //     ]
-            // },
             {
                 label: 'Pages',
                 icon: 'pi pi-fw pi-briefcase',
@@ -66,108 +52,56 @@ export class AppMenu {
                                 label: 'Login',
                                 icon: 'pi pi-fw pi-sign-in',
                                 routerLink: ['/auth/login']
-                            },
-                            // {
-                            //     label: 'Error',
-                            //     icon: 'pi pi-fw pi-times-circle',
-                            //     routerLink: ['/auth/error']
-                            // },
-                            // {
-                            //     label: 'Access Denied',
-                            //     icon: 'pi pi-fw pi-lock',
-                            //     routerLink: ['/auth/access']
-                            // }
+                            }
                         ]
                     },
-                    // {
-                    //     label: 'Crud',
-                    //     icon: 'pi pi-fw pi-pencil',
-                    //     routerLink: ['/pages/crud']
-                    // },
                     {
                         label: 'Fisler',
                         icon: 'pi pi-fw pi-pencil',
-                        routerLink: ['/pages/fisler']
-                    },
-                    // {
-                    //     label: 'Not Found',
-                    //     icon: 'pi pi-fw pi-exclamation-circle',
-                    //     routerLink: ['/pages/notfound']
-                    // },
-                    // {
-                    //     label: 'Empty',
-                    //     icon: 'pi pi-fw pi-circle-off',
-                    //     routerLink: ['/pages/empty']
-                    // }
+                        routerLink: ['/pages/fisler'],
+                        permission: 'Fis.View'
+                    }
                 ]
             },
-            // {
-            //     label: 'Hierarchy',
-            //     path: '/hierarchy',
-            //     items: [
-            //         {
-            //             label: 'Submenu 1',
-            //             icon: 'pi pi-fw pi-bookmark',
-            //             path: '/hierarchy/submenu_1',
-            //             items: [
-            //                 {
-            //                     label: 'Submenu 1.1',
-            //                     icon: 'pi pi-fw pi-bookmark',
-            //                     path: '/hierarchy/submenu_1/submenu_1_1',
-            //                     items: [
-            //                         { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-            //                         { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-            //                         { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' }
-            //                     ]
-            //                 },
-            //                 {
-            //                     label: 'Submenu 1.2',
-            //                     icon: 'pi pi-fw pi-bookmark',
-            //                     path: '/hierarchy/submenu_1/submenu_1_2',
-            //                     items: [{ label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }]
-            //                 }
-            //             ]
-            //         },
-            //         {
-            //             label: 'Submenu 2',
-            //             icon: 'pi pi-fw pi-bookmark',
-            //             path: '/hierarchy/submenu_2',
-            //             items: [
-            //                 {
-            //                     label: 'Submenu 2.1',
-            //                     icon: 'pi pi-fw pi-bookmark',
-            //                     path: '/hierarchy/submenu_2/submenu_2_1',
-            //                     items: [
-            //                         { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-            //                         { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' }
-            //                     ]
-            //                 },
-            //                 {
-            //                     label: 'Submenu 2.2',
-            //                     icon: 'pi pi-fw pi-bookmark',
-            //                     path: '/hierarchy/submenu_2/submenu_2_2',
-            //                     items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }]
-            //                 }
-            //             ]
-            //         }
-            //     ]
-            // },
-            // {
-            //     label: 'Get Started',
-            //     items: [
-            //         {
-            //             label: 'Documentation',
-            //             icon: 'pi pi-fw pi-book',
-            //             routerLink: ['/documentation']
-            //         },
-            //         {
-            //             label: 'View Source',
-            //             icon: 'pi pi-fw pi-github',
-            //             url: 'https://github.com/primefaces/sakai-ng',
-            //             target: '_blank'
-            //         }
-            //     ]
-            // }
+            {
+                label: 'Admin',
+                icon: 'pi pi-fw pi-cog',
+                permission: 'Admin',
+                items: [
+                    { label: 'Users', icon: 'pi pi-fw pi-users', routerLink: ['/pages/users'], permission: 'Users.View' },
+                    { label: 'Roles', icon: 'pi pi-fw pi-lock', routerLink: ['/pages/roles'], permission: 'Roles.View' }
+                ]
+            }
         ];
+
+        this.model = this.filterModel(this.fullModel);
+
+        // update menu when auth state changes
+        this.sub = this.auth.getCurrentUser().subscribe(() => {
+            this.model = this.filterModel(this.fullModel);
+        });
+        // also refresh when role definitions change
+        this.auth.getRolesChanged().subscribe(() => {
+            this.model = this.filterModel(this.fullModel);
+        });
+    }
+
+    private filterModel(items: any[]): MenuItem[] {
+        const out: MenuItem[] = [];
+        for (const it of items) {
+            if ((it as any).permission) {
+                if (!this.auth.hasPermission((it as any).permission)) continue;
+            }
+            const copy = { ...it } as any;
+            if (copy.items && Array.isArray(copy.items)) {
+                copy.items = this.filterModel(copy.items);
+            }
+            out.push(copy);
+        }
+        return out;
+    }
+
+    ngOnDestroy(): void {
+        this.sub?.unsubscribe();
     }
 }

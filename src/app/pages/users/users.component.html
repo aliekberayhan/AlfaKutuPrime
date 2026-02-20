@@ -1,0 +1,89 @@
+<p-toolbar styleClass="mb-6">
+  <ng-template #start>
+    <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+    <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedUsers()"
+      [disabled]="!selectedUsers || !selectedUsers.length" />
+  </ng-template>
+
+  <ng-template #end>
+    <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV(dt)" />
+  </ng-template>
+</p-toolbar>
+
+<p-table #dt [value]="users" [rows]="10" [paginator]="true" [rowHover]="true" [(selection)]="selectedUsers"
+  dataKey="userName" [tableStyle]="{ 'min-width': '60rem' }" [rowsPerPageOptions]="[10, 20, 30]"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records" [showCurrentPageReport]="true"
+  [globalFilterFields]="['userName','roles']">
+  <ng-template #caption>
+    <div class="flex items-center justify-between">
+      <h5 class="m-0">Kullanıcılar</h5>
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search" />
+        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Ara..." />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox />
+      </th>
+      <th pSortableColumn="userName" style="min-width: 12rem">
+        Username
+        <p-sortIcon field="userName" />
+      </th>
+      <th style="min-width: 22rem">Roles</th>
+      <th style="min-width: 10rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-user>
+    <tr>
+      <td style="width: 3rem">
+        <p-tableCheckbox [value]="user" />
+      </td>
+
+      <td style="min-width: 12rem">
+        {{ user.userName }}
+      </td>
+
+      <td style="min-width: 22rem">
+        {{ user.roles.join(', ') }}
+      </td>
+
+      <td style="min-width: 10rem">
+        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+          (click)="editUser(user)" />
+        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+          (click)="confirmDelete(user)" />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="userDialog" [style]="{ width: '520px' }" header="Kullanıcı" [modal]="true">
+  <ng-template #content>
+    <div class="flex flex-col gap-4">
+      <div>
+        <label class="block font-bold mb-2">Username</label>
+        <input pInputText [(ngModel)]="current.userName" fluid />
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Password</label>
+        <input pInputText type="password" [(ngModel)]="current.password" fluid />
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Roles</label>
+        <p-multiSelect [options]="roleOptions" [(ngModel)]="current.roles" optionLabel="label" optionValue="value" />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
+    <p-button label="Save" icon="pi pi-check" (click)="saveUser()" />
+  </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+
