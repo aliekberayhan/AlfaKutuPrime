@@ -28,21 +28,60 @@
       <td>{{r.productCode}} ({{r.quantity}})</td>
       <td>{{r.notes.length}}</td>
       <td>
-        <p-button icon="pi pi-pencil" (click)="setInAccounting(r)"></p-button>
+        <p-button icon="pi pi-check" class="mr-2" (click)="setInAccounting(r)"></p-button>
         <p-button icon="pi pi-plus" (click)="openNoteDialog(r)"></p-button>
       </td>
     </tr>
   </ng-template>
 </p-table>
 
-<p-dialog header="Add Note" [(visible)]="noteDialog" [modal]="true" [style]="{ width: 'auto' }">
-  <div class="p-fluid">
-    <label class="block font-bold mb-2">Note</label>
-    <textarea pInputTextarea rows="4" [(ngModel)]="noteText"></textarea>
-  </div>
-  <ng-template pTemplate="footer">
-    <p-button label="Cancel" icon="pi pi-times" text (click)="noteDialog=false"></p-button>
-    <p-button label="Add" icon="pi pi-plus" (onClick)="confirmAddNote()"></p-button>
+<p-dialog header="Request Details" [(visible)]="noteDialog" [modal]="true" [style]="{ width: '720px' }" [closable]="true">
+  <ng-template #content>
+    <div *ngIf="selected" class="p-4">
+      <div class="grid grid-cols-12 gap-4 mb-4">
+        <div class="col-span-6">
+          <div class="text-sm text-muted">Id</div>
+          <div class="font-medium">{{selected.id}}</div>
+        </div>
+        <div class="col-span-6">
+          <div class="text-sm text-muted">Created</div>
+          <div class="font-medium">{{selected.createdAt | date:'short'}}</div>
+        </div>
+        <div class="col-span-6 mt-3">
+          <div class="text-sm text-muted">Product</div>
+          <div class="font-medium">{{selected.productCode}} ({{selected.quantity}})</div>
+        </div>
+        <div class="col-span-6 mt-3">
+          <div class="text-sm text-muted">Status</div>
+          <div class="font-medium">{{selected.status}}</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="text-sm text-muted mb-2">Notes</div>
+        <div class="p-3 bg-white border rounded shadow-sm max-h-48 overflow-auto">
+          <ul class="space-y-3">
+            <li *ngFor="let n of selected.notes">
+              <div class="text-xs text-muted">{{n.time | date:'short'}}</div>
+              <div><strong>{{n.author}}</strong> <span class="text-sm">({{n.role ?? ''}})</span></div>
+              <div class="mt-1">{{n.text}}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold mb-1">Add note</label>
+        <textarea pInputTextarea [(ngModel)]="noteText" rows="4" class="w-full"></textarea>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="flex justify-end gap-3 p-3">
+      <p-button label="Close" icon="pi pi-times" class="p-button-text" (onClick)="noteDialog=false"></p-button>
+      <p-button label="Add" icon="pi pi-plus" (onClick)="confirmAddNote()"></p-button>
+    </div>
   </ng-template>
 </p-dialog>
 

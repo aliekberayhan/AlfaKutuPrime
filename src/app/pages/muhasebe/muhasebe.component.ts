@@ -14,7 +14,7 @@ import { TextareaModule } from 'primeng/textarea';
 @Component({
   selector: 'app-muhasebe',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule, TextareaModule],
   providers: [MessageService],
   templateUrl: './muhasebe.component.html'
 })
