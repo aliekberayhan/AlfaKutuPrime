@@ -106,19 +106,19 @@ export class Fisler implements OnInit {
         ];
 
         this.cols = [
-            { field: 'id', header: 'Fiş No', customExportHeader: 'Fis No' },
-            { field: 'karantinaGiris', header: 'Karantina Giriş' },
-            { field: 'karantinaCikis', header: 'Karantina Çıkış' },
-            { field: 'isemriNo', header: 'İşemri No' },
-            { field: 'isIstasyonuNo', header: 'İş İstasyonu' },
-            { field: 'isIstasyonuAdi', header: 'İş İstasyonu Adı' },
-            { field: 'code', header: 'Stok No' },
-            { field: 'name', header: 'Stok Adı' },
-            { field: 'ekipmanNo', header: 'Ekipman No' },
-            { field: 'miktar', header: 'Miktar' },
-            { field: 'redMiktar', header: 'Red Miktar' },
-            { field: 'planFisRef', header: 'Plan Fiş Referansı' },
-            { field: 'description', header: 'Açıklama' }
+            { field: 'id', header: 'Slip No', customExportHeader: 'Slip No' },
+            { field: 'karantinaGiris', header: 'Quarantine In' },
+            { field: 'karantinaCikis', header: 'Quarantine Out' },
+            { field: 'isemriNo', header: 'Work Order No' },
+            { field: 'isIstasyonuNo', header: 'Work Station' },
+            { field: 'isIstasyonuAdi', header: 'Work Station Name' },
+            { field: 'code', header: 'Item Code' },
+            { field: 'name', header: 'Item Name' },
+            { field: 'ekipmanNo', header: 'Equipment No' },
+            { field: 'miktar', header: 'Quantity' },
+            { field: 'redMiktar', header: 'Rejected Qty' },
+            { field: 'planFisRef', header: 'Plan Slip Ref' },
+            { field: 'description', header: 'Description' }
         ];
 
         this.exportColumns = this.cols.map(col => ({
@@ -137,12 +137,12 @@ export class Fisler implements OnInit {
                 this.products.set(Array.isArray(data) ? data : []);
             })
             .catch(err => {
-                this.error.set('Veri okunamadı. JSON yolu / formatı hatalı olabilir.');
+                this.error.set('Data could not be read. JSON path/format may be incorrect.');
                 this.products.set([]);
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Hata',
-                    detail: 'Üretim fişleri yüklenemedi.',
+                    summary: 'Error',
+                    detail: 'Production slips could not be loaded.',
                     life: 4000
                 });
             })
@@ -195,8 +195,8 @@ export class Fisler implements OnInit {
         if (!this.selectedProducts?.length) return;
 
         this.confirmationService.confirm({
-            message: 'Seçili kayıtlar silinsin mi?',
-            header: 'Onay',
+            message: 'Delete selected records?',
+            header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 const selected = new Set(this.selectedProducts!.map(x => x.id));
@@ -205,8 +205,8 @@ export class Fisler implements OnInit {
 
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Başarılı',
-                    detail: 'Kayıtlar silindi (lokal).',
+                    summary: 'Success',
+                    detail: 'Records deleted (local).',
                     life: 2500
                 });
             }
@@ -215,16 +215,16 @@ export class Fisler implements OnInit {
 
     deleteProduct(product: Product): void {
         this.confirmationService.confirm({
-            message: `Silinsin mi: ${product.name ?? product.id ?? ''}?`,
-            header: 'Onay',
+            message: `Delete: ${product.name ?? product.id ?? ''}?`,
+            header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.products.set(this.products().filter(x => x.id !== product.id));
                 this.product = {};
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Başarılı',
-                    detail: 'Kayıt silindi (lokal).',
+                    summary: 'Success',
+                    detail: 'Record deleted (local).',
                     life: 2500
                 });
             }
@@ -247,8 +247,8 @@ export class Fisler implements OnInit {
             this.products.set(list);
             this.messageService.add({
                 severity: 'success',
-                summary: 'Başarılı',
-                detail: 'Kayıt güncellendi (lokal).',
+                summary: 'Success',
+                detail: 'Record updated (local).',
                 life: 2500
             });
         } else {
@@ -259,8 +259,8 @@ export class Fisler implements OnInit {
 
             this.messageService.add({
                 severity: 'success',
-                summary: 'Başarılı',
-                detail: 'Kayıt eklendi (lokal).',
+                summary: 'Success',
+                detail: 'Record added (local).',
                 life: 2500
             });
         }

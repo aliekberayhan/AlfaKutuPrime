@@ -27,21 +27,25 @@
   </ng-template>
 </p-table>
 
-<p-dialog header="New Sample Request" [(visible)]="dialog" [modal]="true" [style]="{ width: '560px' }" [closable]="true">
+<p-dialog header="New Sample Request" [(visible)]="dialog" [modal]="true" [style]="{ width: '600px' }" [closable]="true">
   <ng-template #content>
-    <div class="grid grid-cols-12 gap-4 p-4">
-      <div class="col-span-6">
-        <label class="block text-sm font-semibold mb-1">Product Code</label>
-        <input pInputText [(ngModel)]="productCode" class="w-full" placeholder="Ürün kodu girin" />
-      </div>
-      <div class="col-span-6">
-        <label class="block text-sm font-semibold mb-1">Quantity</label>
-        <input pInputText type="number" [(ngModel)]="quantity" class="w-full" placeholder="Adet" />
-      </div>
+    <div class="p-4">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-6">
+          <label class="block text-sm font-semibold mb-1">Product Code</label>
+          <input pInputText type="text" [(ngModel)]="productCode" class="w-full" />
+          <small class="text-red-500" *ngIf="!productCode && dialog">Product code is required.</small>
+        </div>
+        <div class="col-span-6">
+          <label class="block text-sm font-semibold mb-1">Quantity</label>
+          <p-inputNumber [(ngModel)]="quantity" [min]="1" class="w-full" inputId="quantity"></p-inputNumber>
+          <small class="text-red-500" *ngIf="(!quantity || quantity <= 0) && dialog">Quantity must be greater than 0.</small>
+        </div>
 
-      <div class="col-span-12">
-        <label class="block text-sm font-semibold mb-1">Title (optional)</label>
-        <input pInputText [(ngModel)]="title" class="w-full" placeholder="Kısa açıklama (isteğe bağlı)" />
+        <div class="col-span-12">
+          <label class="block text-sm font-semibold mb-1">Title (optional)</label>
+          <input pInputText type="text" [(ngModel)]="title" class="w-full" />
+        </div>
       </div>
     </div>
   </ng-template>
@@ -49,7 +53,7 @@
   <ng-template #footer>
     <div class="flex justify-end gap-3 p-3">
       <p-button label="Cancel" icon="pi pi-times" class="p-button-text" (onClick)="dialog=false"></p-button>
-      <p-button label="Create" icon="pi pi-check" (onClick)="create()"></p-button>
+      <p-button label="Create" icon="pi pi-check" (onClick)="create()" [disabled]="!productCode || !quantity || quantity <= 0"></p-button>
     </div>
   </ng-template>
 </p-dialog>
@@ -92,7 +96,7 @@
 
       <div>
         <label class="block text-sm font-semibold mb-1">Add note</label>
-        <textarea pInputTextarea [(ngModel)]="noteText" rows="4" class="w-full"></textarea>
+        <textarea pTextarea [(ngModel)]="noteText" rows="4" class="w-full"></textarea>
       </div>
     </div>
   </ng-template>

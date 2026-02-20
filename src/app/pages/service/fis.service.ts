@@ -139,10 +139,10 @@ export class FisService {
     
     const tarih = this.toDateOnly(r["Tarih"]);
     return [
-      `İşemri: ${r["İşemri No"]}`,
-      `İstasyon: ${r["İş İstasyonu No"]}`,
-      `Tarih: ${tarih}`,
-      `Ekipman: ${r["Ekipman No"]}`,
+      `Work Order: ${r["İşemri No"]}`,
+      `Station: ${r["İş İstasyonu No"]}`,
+      `Date: ${tarih}`,
+      `Equipment: ${r["Ekipman No"]}`,
       `PlanRef: ${r["Plan Fiş Referansı"]}`
     ].join(' | ');
   }
