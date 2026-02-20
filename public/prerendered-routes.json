@@ -1,0 +1,9 @@
+{
+  "routes": {
+    "./src/app/pages/landing/landing.module#LandingModule": {
+      "type": "lazy",
+      "module": "./src/app/pages/landing/landing.module#LandingModule",
+      "route": ""
+    }
+  }
+}
