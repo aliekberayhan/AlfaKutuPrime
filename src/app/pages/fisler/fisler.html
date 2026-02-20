@@ -16,7 +16,7 @@
     [globalFilterFields]="['id','karantinaGiris','karantinaCikis','isemriNo','isIstasyonuNo','isIstasyonuAdi','code','name','ekipmanNo','miktar','redMiktar','planFisRef','description']">
     <ng-template #caption>
         <div class="flex items-center justify-between">
-            <h5 class="m-0">Üretim Fişleri</h5>
+            <h5 class="m-0">Production Slips</h5>
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Ara..." />
@@ -164,12 +164,12 @@
     </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="productDialog" [style]="{ width: '520px' }" header="Fiş Detayı" [modal]="true">
+<p-dialog [(visible)]="productDialog" [style]="{ width: '520px' }" header="Slip Details" [modal]="true">
     <ng-template #content>
         <div class="flex flex-col gap-4">
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-6">
-                    <label class="block font-bold mb-2">Fiş No</label>
+                    <label class="block font-bold mb-2">Slip No</label>
                     <input pInputText [(ngModel)]="product.id" fluid />
                 </div>
 

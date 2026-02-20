@@ -56,7 +56,7 @@ export class AppMenu implements OnInit, OnDestroy {
                         ]
                     },
                     {
-                        label: 'Fisler',
+                        label: 'Slips',
                         icon: 'pi pi-fw pi-pencil',
                         routerLink: ['/pages/fisler'],
                         permission: 'Fis.View'
@@ -69,13 +69,13 @@ export class AppMenu implements OnInit, OnDestroy {
                         permission: 'Samples.Create'
                     },
                     {
-                        label: 'Muhasebe',
+                        label: 'Accounting',
                         icon: 'pi pi-fw pi-money-bill',
                         routerLink: ['/pages/muhasebe'],
                         permission: 'Samples.Manage'
                     },
                     {
-                        label: 'Numune Talebi',
+                        label: 'Sample Request',
                         icon: 'pi pi-fw pi-check-circle',
                         routerLink: ['/pages/kalite-samples'],
                         permission: 'Kalite.View'
