@@ -24,7 +24,7 @@ export default [
     { path: 'kalite-samples', component: KaliteComponent, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
     { path: 'roles', component: RolesComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
     { path: 'users', component: UsersComponent, canActivate: [PermissionGuard], data: { permission: 'Users.View' } },
-    { path: 'customers', component: CustomersComponent, canActivate: [PermissionGuard], data: { permission: 'Customer.View' } },
+    { path: 'customers', component: CustomersComponent, canActivate: [PermissionGuard], data: { permission: 'Customers.Manage' } },
     { path: 'empty', component: Empty },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

@@ -1,15 +1,60 @@
 <p-toolbar styleClass="mb-6">
   <ng-template #start>
-    <h5>Müşteriler</h5>
+    <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()"></p-button>
+    <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedCustomers()"
+      [disabled]="!selectedCustomers || !selectedCustomers.length"></p-button>
   </ng-template>
 </p-toolbar>
 
-<p-table [value]="customers" [rows]="10" [paginator]="true" [rowHover]="true">
+<p-table #dt [value]="customers" [rows]="10" [paginator]="true" [rowHover]="true" [(selection)]="selectedCustomers"
+  dataKey="userName" [tableStyle]="{ 'min-width': '60rem' }" [rowsPerPageOptions]="[10, 20, 30]"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records" [showCurrentPageReport]="true">
   <ng-template pTemplate="header">
-    <tr><th>Username</th><th>Roles</th></tr>
+    <tr>
+      <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+      <th pSortableColumn="userName">Username <p-sortIcon field="userName"></p-sortIcon></th>
+      <th>Active</th>
+      <th>Roles</th>
+      <th style="width:10rem">Actions</th>
+    </tr>
   </ng-template>
   <ng-template pTemplate="body" let-c>
-    <tr><td>{{c.userName}}</td><td>{{c.roles.join(', ')}}</td></tr>
+    <tr>
+      <td><p-tableCheckbox [value]="c"></p-tableCheckbox></td>
+      <td>{{c.userName}}</td>
+      <td>{{c.active ? 'Yes' : 'No'}}</td>
+      <td>{{c.roles.join(', ')}}</td>
+      <td>
+        <p-button icon="pi pi-pencil" class="mr-2" (click)="editCustomer(c)"></p-button>
+        <p-button icon="pi pi-trash" severity="danger" (click)="confirmDelete(c)"></p-button>
+      </td>
+    </tr>
   </ng-template>
 </p-table>
+
+<p-dialog header="Customer" [(visible)]="customerDialog" [modal]="true" [style]="{ width: '560px' }">
+  <ng-template #content>
+    <div class="grid grid-cols-12 gap-4 p-4">
+      <div class="col-span-6">
+        <label class="block text-sm font-semibold mb-1">Username</label>
+        <input pInputText [(ngModel)]="current.userName" class="w-full" />
+      </div>
+      <div class="col-span-6">
+        <label class="block text-sm font-semibold mb-1">Password</label>
+        <input pInputText type="password" [(ngModel)]="current.password" class="w-full" />
+      </div>
+
+      <div class="col-span-12 flex items-center gap-3 mt-2">
+        <p-checkbox binary="true" [(ngModel)]="current.active"></p-checkbox>
+        <label class="mb-0">Active</label>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="flex justify-end gap-3 p-3">
+      <p-button label="Cancel" icon="pi pi-times" class="p-button-text" (onClick)="hideDialog()"></p-button>
+      <p-button label="Save" icon="pi pi-check" (onClick)="saveCustomer()" />
+    </div>
+  </ng-template>
+</p-dialog>
 

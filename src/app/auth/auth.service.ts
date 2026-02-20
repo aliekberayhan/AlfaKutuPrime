@@ -11,6 +11,7 @@ export interface CurrentUser {
 export class AuthService {
   private currentUser$ = new BehaviorSubject<CurrentUser | null>(null);
   private rolesChanged$ = new BehaviorSubject<number>(0);
+  private users$ = new BehaviorSubject<StaticUser[]>([]);
 
   constructor() {
     // try restore from storage
@@ -20,15 +21,54 @@ export class AuthService {
         this.currentUser$.next(JSON.parse(raw));
       } catch {}
     }
+    // load users from storage or defaults
+    const usersRaw = localStorage.getItem('users_v1');
+    if (usersRaw) {
+      try {
+        this.users$.next(JSON.parse(usersRaw) as StaticUser[]);
+      } catch {
+        this.users$.next(USERS as StaticUser[]);
+      }
+    } else {
+      this.users$.next(USERS as StaticUser[]);
+    }
   }
 
   login(userName: string, password: string): Observable<CurrentUser> {
-    const found = USERS.find(u => u.userName === userName && u.password === password);
+    const found = this.users$.getValue().find(u => u.userName === userName && u.password === password);
     if (!found) return throwError(() => new Error('Invalid credentials'));
+    if ((found as any).active === false) return throwError(() => new Error('Account inactive'));
     const user: CurrentUser = { userName: found.userName, roles: found.roles };
     this.currentUser$.next(user);
     localStorage.setItem('current_user', JSON.stringify(user));
     return of(user);
+  }
+
+  // users management
+  getUsers(): Observable<StaticUser[]> {
+    return this.users$.asObservable();
+  }
+
+  getUsersSnapshot(): StaticUser[] {
+    return this.users$.getValue();
+  }
+
+  addUser(u: StaticUser) {
+    const list = [...this.users$.getValue(), u];
+    this.users$.next(list);
+    localStorage.setItem('users_v1', JSON.stringify(list));
+  }
+
+  updateUser(u: StaticUser) {
+    const list = this.users$.getValue().map(x => x.userName === u.userName ? u : x);
+    this.users$.next(list);
+    localStorage.setItem('users_v1', JSON.stringify(list));
+  }
+
+  deleteUser(userName: string) {
+    const list = this.users$.getValue().filter(x => x.userName !== userName);
+    this.users$.next(list);
+    localStorage.setItem('users_v1', JSON.stringify(list));
   }
 
   logout() {

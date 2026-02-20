@@ -84,7 +84,7 @@ export class AppMenu implements OnInit, OnDestroy {
                         label: 'Customers',
                         icon: 'pi pi-fw pi-check-circle',
                         routerLink: ['/pages/customers'],
-                        permission: 'Customer.View'
+                        permission: 'Customers.Manage'
                     }
                 ]
             },

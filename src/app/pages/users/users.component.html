@@ -33,6 +33,7 @@
         Username
         <p-sortIcon field="userName" />
       </th>
+      <th style="min-width: 12rem">Active</th>
       <th style="min-width: 22rem">Roles</th>
       <th style="min-width: 10rem"></th>
     </tr>
@@ -46,6 +47,10 @@
 
       <td style="min-width: 12rem">
         {{ user.userName }}
+      </td>
+
+      <td style="min-width: 12rem">
+        {{ user.active ? 'Yes' : 'No' }}
       </td>
 
       <td style="min-width: 22rem">
@@ -74,8 +79,12 @@
         <input pInputText type="password" [(ngModel)]="current.password" fluid />
       </div>
       <div>
+        <label class="block font-bold mb-2">Active</label>
+        <p-checkbox binary="true" [(ngModel)]="current.active"></p-checkbox>
+      </div>
+      <div>
         <label class="block font-bold mb-2">Roles</label>
-        <p-multiSelect [options]="roleOptions" [(ngModel)]="current.roles" optionLabel="label" optionValue="value" />
+        <p-multiSelect [options]="roleOptions" [(ngModel)]="current.roles" optionLabel="label" optionValue="value" appendTo="body" />
       </div>
     </div>
   </ng-template>

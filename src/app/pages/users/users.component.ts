@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { USERS, ROLES } from '../../auth/static-auth.data';
+import { ROLES } from '../../auth/static-auth.data';
 import { AuthService } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,15 +23,16 @@ import { Table } from 'primeng/table';
   templateUrl: './users.component.html'
 })
 export class UsersComponent implements OnInit {
-  users = USERS;
+  users: any[] = [];
   selectedUsers: any[] | null = null;
   userDialog = false;
   current: any = { userName: '', password: '', roles: [] as string[] };
   roleOptions = ROLES.map(r => ({ label: r.displayName ?? r.name, value: r.name }));
 
   constructor(private auth: AuthService, private confirmation: ConfirmationService, private messageService: MessageService) {}
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.auth.getUsers().subscribe(list => this.users = list);
+  }
 
   onGlobalFilter(table: Table, event: Event): void {
     const value = (event.target as HTMLInputElement).value ?? '';
@@ -43,7 +44,7 @@ export class UsersComponent implements OnInit {
   }
 
   openNew() {
-    this.current = { userName: '', password: '', roles: [] };
+    this.current = { userName: '', password: '', roles: [], active: true };
     this.userDialog = true;
   }
 
@@ -59,11 +60,12 @@ export class UsersComponent implements OnInit {
   saveUser() {
     if (!this.current.userName) return;
     const idx = this.users.findIndex(u => u.userName === this.current.userName);
+    const userObj = { userName: this.current.userName, password: this.current.password, roles: this.current.roles, active: this.current.active ?? true };
     if (idx >= 0) {
-      this.users[idx] = { ...this.current };
+      this.auth.updateUser(userObj);
       this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'User updated' });
     } else {
-      this.users.push({ userName: this.current.userName, password: this.current.password, roles: this.current.roles });
+      this.auth.addUser(userObj);
       this.messageService.add({ severity: 'success', summary: 'Added', detail: 'User added' });
     }
     const logged = this.auth.getCurrentUserSync();
@@ -77,7 +79,7 @@ export class UsersComponent implements OnInit {
     this.confirmation.confirm({
       message: `Delete ${user.userName}?`,
       accept: () => {
-        this.users = this.users.filter(u => u.userName !== user.userName);
+        this.auth.deleteUser(user.userName);
         this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'User deleted' });
         const logged = this.auth.getCurrentUserSync();
         if (logged && logged.userName === user.userName) {
@@ -94,7 +96,9 @@ export class UsersComponent implements OnInit {
     this.confirmation.confirm({
       message: 'Delete selected users?',
       accept: () => {
-        this.users = this.users.filter(u => !set.has(u.userName));
+        for (const name of selectedNames) {
+          this.auth.deleteUser(name);
+        }
         const logged = this.auth.getCurrentUserSync();
         if (logged && set.has(logged.userName)) {
           this.auth.logout();
