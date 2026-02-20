@@ -8,12 +8,13 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { AuthService } from '../../auth/auth.service';
+import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator, DialogModule],
     template: `
         <app-floating-configurator />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
@@ -61,6 +62,14 @@ import { Router } from '@angular/router';
                     </div>
                 </div>
             </div>
+            <p-dialog header="Mesaj" [(visible)]="errorDialog" [modal]="true" [closable]="true" [style]="{ width: '420px' }">
+                <div class="p-3">
+                    <p>{{ errorMessage }}</p>
+                </div>
+                <ng-template pTemplate="footer">
+                    <p-button label="Tamam" (onClick)="errorDialog=false"></p-button>
+                </ng-template>
+            </p-dialog>
         </div>
     `
 })
@@ -75,7 +84,12 @@ export class Login {
     login() {
         this.auth.login(this.email, this.password).subscribe({
             next: () => this.router.navigate(['/']),
-            error: () => alert('Giriş başarısız')
+            error: (err) => {
+                this.errorMessage = (err?.message) ? err.message : 'Giriş başarısız';
+                this.errorDialog = true;
+            }
         });
     }
+    errorDialog = false;
+    errorMessage = '';
 }
