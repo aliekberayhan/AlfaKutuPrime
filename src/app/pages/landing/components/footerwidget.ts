@@ -17,7 +17,7 @@ import { Router, RouterModule } from '@angular/router';
                     <div class="grid grid-cols-12 gap-8 text-center md:text-left">
                         <div class="col-span-12 md:col-span-3">
                             <h4 class="font-medium text-2xl leading-normal mb-6 text-surface-900 dark:text-surface-0">Company</h4>
-                            <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">About Us</a>
+                            <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100" (click)="router.navigate(['/landing'], { queryParams: { panel: 'about' } })">About Us</a>
                             <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">News</a>
                             <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Investor Relations</a>
                             <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Careers</a>
@@ -41,8 +41,8 @@ import { Router, RouterModule } from '@angular/router';
 
                         <div class="col-span-12 md:col-span-3">
                             <h4 class="font-medium text-2xl leading-normal mb-6 text-surface-900 dark:text-surface-0">Legal</h4>
-                            <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Brand Policy</a>
-                            <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Privacy Policy</a>
+                            <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100" (click)="router.navigate(['/landing'], { queryParams: { panel: 'policies' } })">Policies</a>
+                            <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100" (click)="router.navigate(['/landing'], { queryParams: { panel: 'documents' } })">Documents</a>
                             <a class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Terms of Service</a>
                         </div>
                     </div>

@@ -6,9 +6,6 @@ import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 
 export const appRoutes: Routes = [
-    // Redirect root to landing page so visiting '/' opens the landing view by default
-    { path: '', redirectTo: 'landing', pathMatch: 'full' },
-    
     {
         path: '',
         component: AppLayout,
