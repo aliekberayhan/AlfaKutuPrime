@@ -9,11 +9,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToolbarModule } from 'primeng/toolbar';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-kalite',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule, TagModule],
   providers: [MessageService],
   templateUrl: './kalite.component.html'
 })
@@ -54,6 +55,18 @@ export class KaliteComponent implements OnInit {
     const updated = this.svc.getSnapshot().find(i => i.id === this.selected?.id);
     if (updated) this.selected = updated;
     this.noteDialog = false;
+  }
+  getSeverity(status?: string) {
+    switch ((status || '').toLowerCase()) {
+      case 'created':
+        return 'info';
+      case 'inaccounting':
+        return 'warn';
+      case 'ready':
+        return 'success';
+      default:
+        return 'info';
+    }
   }
 }
 

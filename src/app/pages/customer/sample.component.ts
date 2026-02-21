@@ -9,12 +9,13 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TagModule } from 'primeng/tag';
 import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
   selector: 'app-customer-samples',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, ToolbarModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, ToolbarModule, TagModule],
   templateUrl: './sample.component.html'
 })
 export class CustomerSampleComponent implements OnInit {
@@ -72,6 +73,18 @@ export class CustomerSampleComponent implements OnInit {
       // also refresh list shown to user
       const me = this.auth.getCurrentUserSync()?.userName;
       this.requests = this.svc.getSnapshot().filter(l => l.customerUser === me);
+    }
+  }
+  getSeverity(status?: string) {
+    switch ((status || '').toLowerCase()) {
+      case 'created':
+        return 'info';
+      case 'inaccounting':
+        return 'warn';
+      case 'ready':
+        return 'success';
+      default:
+        return 'info';
     }
   }
 }

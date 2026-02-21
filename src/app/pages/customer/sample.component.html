@@ -18,7 +18,7 @@
     <tr>
       <td>{{r.id}}</td>
       <td>{{r.createdAt | date:'short'}}</td>
-      <td>{{r.status}}</td>
+      <td><p-tag [value]="r.status" [severity]="getSeverity(r.status)"></p-tag></td>
       <td>{{r.notes.length}}</td>
       <td>
         <p-button icon="pi pi-eye" (click)="view(r)"></p-button>

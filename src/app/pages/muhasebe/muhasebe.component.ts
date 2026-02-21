@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToolbarModule } from 'primeng/toolbar';
+import { TagModule } from 'primeng/tag';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
 import { TextareaModule } from 'primeng/textarea';
@@ -14,7 +15,7 @@ import { TextareaModule } from 'primeng/textarea';
 @Component({
   selector: 'app-muhasebe',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule, TextareaModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, DialogModule, InputTextModule, ToolbarModule, TextareaModule, TagModule],
   providers: [MessageService],
   templateUrl: './muhasebe.component.html'
 })
@@ -59,6 +60,18 @@ export class MuhasebeComponent implements OnInit {
     const updated = this.svc.getSnapshot().find(i => i.id === this.selected?.id);
     if (updated) this.selected = updated;
     this.noteDialog = false;
+  }
+  getSeverity(status?: string) {
+    switch ((status || '').toLowerCase()) {
+      case 'created':
+        return 'info';
+      case 'inaccounting':
+        return 'warn';
+      case 'ready':
+        return 'success';
+      default:
+        return 'info';
+    }
   }
 }
 

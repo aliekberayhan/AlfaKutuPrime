@@ -21,7 +21,7 @@
       <td>{{r.id}}</td>
       <td>{{r.customerUser}}</td>
       <td>{{r.createdAt | date:'short'}}</td>
-      <td>{{r.status}}</td>
+      <td><p-tag [value]="r.status" [severity]="getSeverity(r.status)"></p-tag></td>
       <td>{{r.productCode}} ({{r.quantity}})</td>
       <td>{{r.notes.length}}</td>
       <td>
