@@ -5,12 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-customer',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="p-4">
-      <h2>Müşteri Sayfası</h2>
-      <p>Bu sayfa Customer rolüne sahip kullanıcılar için gösterilecektir.</p>
-    </div>
-  `
+  templateUrl: './customer.component.html'
 })
 export class CustomerPage {}
 

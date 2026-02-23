@@ -19,42 +19,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-landing',
     standalone: true,
     imports: [CommonModule, RouterModule, TopbarWidget, HeroWidget, HighlightsWidget, PricingWidget, FooterWidget, RippleModule, StyleClassModule, ButtonModule, DividerModule],
-    template: `
-        <div class="bg-surface-0 dark:bg-surface-900">
-            <div id="home" class="landing-wrapper overflow-hidden">
-                <topbar-widget class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static" />
-
-                <ng-container *ngIf="panel !== 'about' && panel !== 'policies' && panel !== 'documents'">
-                    <hero-widget />
-                    <div class="px-6 md:px-12 lg:px-20">
-                        <ng-container *ngComponentOutlet="featuresComponent | async"></ng-container>
-                    </div>
-                    <highlights-widget />
-                    <pricing-widget />
-                </ng-container>
-
-                <ng-container *ngIf="panel === 'about'">
-                    <div class="px-6 md:px-12 lg:px-20 py-8">
-                        <ng-container *ngComponentOutlet="aboutComponent | async"></ng-container>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="panel === 'policies'">
-                    <div class="px-6 md:px-12 lg:px-20 py-8">
-                        <ng-container *ngComponentOutlet="policiesComponent | async"></ng-container>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="panel === 'documents'">
-                    <div class="px-6 md:px-12 lg:px-20 py-8">
-                        <ng-container *ngComponentOutlet="documentsComponent | async"></ng-container>
-                    </div>
-                </ng-container>
-
-                <footer-widget />
-            </div>
-        </div>
-    `
+    templateUrl: './landing.component.html'
 })
 export class Landing implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);

@@ -1,0 +1,76 @@
+    <div class="mb-6">
+      <div class="bg-white border rounded-lg p-4 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-2xl font-extrabold text-surface-900">Reports</div>
+            <div class="text-sm text-surface-600 mt-1">Sales and order analytics — filter by customer, product, status and period.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div>
+        <label class="text-sm">Customer</label>
+        <p-multiSelect [options]="customers" optionLabel="label" optionValue="value" [(ngModel)]="filterCustomers" placeholder="Select customers" (onChange)="applyFilters()" class="w-full"></p-multiSelect>
+      </div>
+      <div>
+        <label class="text-sm">Product</label>
+        <p-multiSelect [options]="products" optionLabel="label" optionValue="value" [(ngModel)]="filterProducts" placeholder="Select products" (onChange)="applyFilters()" class="w-full"></p-multiSelect>
+      </div>
+      <div>
+        <label class="text-sm">Status</label>
+        <select class="w-full p-2 border rounded" [(ngModel)]="filterStatus" (change)="applyFilters()">
+          <option value="">All</option>
+          <option value="Open">Open</option>
+          <option value="Pending">Pending</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-sm">Period</label>
+        <select class="w-full p-2 border rounded" [(ngModel)]="filterPeriod" (change)="applyFilters()">
+          <option *ngFor="let pr of periods" [value]="pr.value">{{pr.label}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="p-4 bg-white rounded shadow-sm mb-6">
+      <div class="w-full">
+        <p-chart type="bar" [data]="chartData" [options]="chartOptions" class="h-[30rem]"></p-chart>
+      </div>
+    </div>
+
+    <div class="p-4 bg-white rounded shadow-sm">
+      <div class="flex justify-between items-center mb-4">
+        <div class="font-semibold">Orders (filtered)</div>
+        <div class="flex items-center gap-2">
+          <p-button label="Refresh" icon="pi pi-refresh" (onClick)="applyFilters()"></p-button>
+          <p-button label="Export CSV" icon="pi pi-file" class="p-button-secondary" (onClick)="exportCsv()"></p-button>
+          <p-button label="Export XLS" icon="pi pi-file-excel" class="p-button-success" (onClick)="exportXls()"></p-button>
+        </div>
+      </div>
+
+      <p-table [value]="filteredOrders">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-o>
+          <tr>
+            <td>{{o.id}}</td>
+            <td>{{o.customer}}</td>
+            <td>{{o.date | date:'short'}}</td>
+            <td>{{o.status}}</td>
+            <td>{{calcTotal(o) | currency}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
