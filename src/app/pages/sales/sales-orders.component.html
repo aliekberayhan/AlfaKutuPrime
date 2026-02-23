@@ -9,14 +9,14 @@
         </div>
       </div>
 
-      <p-table [value]="orders()" [paginator]="true" [rows]="10" dataKey="id">
+      <p-table [value]="getOrders()" [paginator]="true" [rows]="10" dataKey="id" sortMode="single">
         <ng-template pTemplate="header">
           <tr>
-            <th>Order</th>
-            <th>Customer</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Total</th>
+            <th pSortableColumn="id">Order <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="customer">Customer <p-sortIcon field="customer"></p-sortIcon></th>
+            <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="total">Total <p-sortIcon field="total"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -26,7 +26,7 @@
             <td>{{o.customer}}</td>
             <td>{{o.date | date:'short'}}</td>
             <td><p-tag [value]="o.status" [severity]="getSeverity(o.status)"></p-tag></td>
-            <td>{{calcTotal(o) | currency}}</td>
+            <td>{{o.total | currency}}</td>
             <td>
               <p-button icon="pi pi-eye" class="mr-2" (onClick)="view(o)"></p-button>
               <p-button icon="pi pi-send" (onClick)="markShipped(o)" [disabled]="o.status==='Shipped'"></p-button>

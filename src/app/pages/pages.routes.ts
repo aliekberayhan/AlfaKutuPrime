@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Documentation } from './documentation/documentation';
+import { Dashboard } from './dashboard/dashboard';
 import { Crud } from './crud/crud';
 import { Empty } from './empty/empty';
 import { Fisler } from './fisler/fisler';
@@ -13,6 +14,8 @@ import { CustomerSampleComponent } from './customer/sample.component';
 import { CustomersComponent } from './customers/customers.component';
 
 export default [
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: Dashboard },
     { path: 'documentation', component: Documentation },
     { path: 'crud', component: Crud },
     { path: 'fisler', component: Fisler, canActivate: [PermissionGuard], data: { permission: 'Fis.View' } },

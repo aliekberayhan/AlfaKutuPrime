@@ -20,19 +20,11 @@
       </div>
       <div>
         <label class="text-sm">Status</label>
-        <select class="w-full p-2 border rounded" [(ngModel)]="filterStatus" (change)="applyFilters()">
-          <option value="">All</option>
-          <option value="Open">Open</option>
-          <option value="Pending">Pending</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
+        <p-select [options]="statusOptions" optionLabel="label" optionValue="value" [(ngModel)]="filterStatus" (onChange)="applyFilters()" placeholder="Select status" class="w-full"></p-select>
       </div>
       <div>
         <label class="text-sm">Period</label>
-        <select class="w-full p-2 border rounded" [(ngModel)]="filterPeriod" (change)="applyFilters()">
-          <option *ngFor="let pr of periods" [value]="pr.value">{{pr.label}}</option>
-        </select>
+        <p-select [options]="periods" optionLabel="label" optionValue="value" [(ngModel)]="filterPeriod" (onChange)="applyFilters()" placeholder="Select period" class="w-full"></p-select>
       </div>
     </div>
 
@@ -52,14 +44,14 @@
         </div>
       </div>
 
-      <p-table [value]="filteredOrders">
+      <p-table [value]="filteredOrders" [paginator]="true" [rows]="10" sortMode="single">
         <ng-template pTemplate="header">
           <tr>
-            <th>Order</th>
-            <th>Customer</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Total</th>
+            <th pSortableColumn="id">Order <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="customer">Customer <p-sortIcon field="customer"></p-sortIcon></th>
+            <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="total">Total <p-sortIcon field="total"></p-sortIcon></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-o>
@@ -68,7 +60,7 @@
             <td>{{o.customer}}</td>
             <td>{{o.date | date:'short'}}</td>
             <td>{{o.status}}</td>
-            <td>{{calcTotal(o) | currency}}</td>
+            <td>{{o.total | currency}}</td>
           </tr>
         </ng-template>
       </p-table>

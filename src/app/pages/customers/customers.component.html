@@ -52,8 +52,31 @@
         <input pInputText [(ngModel)]="current.userName" class="w-full" />
       </div>
       <div class="col-span-6">
-        <label class="block text-sm font-semibold mb-1">Password</label>
-        <input pInputText type="password" [(ngModel)]="current.password" class="w-full" />
+        <label class="block text-sm font-semibold mb-1">Display name</label>
+        <input pInputText [(ngModel)]="current.displayName" class="w-full" />
+      </div>
+      <div class="col-span-6">
+        <label class="block text-sm font-semibold mb-1">Company</label>
+        <input pInputText [(ngModel)]="current.company" class="w-full" />
+      </div>
+      <div class="col-span-6">
+        <label class="block text-sm font-semibold mb-1">Contact person</label>
+        <input pInputText [(ngModel)]="current.contactName" class="w-full" />
+      </div>
+      <div class="col-span-6">
+        <label class="block text-sm font-semibold mb-1">Contact title</label>
+        <input pInputText [(ngModel)]="current.contactTitle" class="w-full" />
+      </div>
+      <div class="col-span-12">
+        <label class="block text-sm font-semibold mb-1">Address</label>
+        <textarea pInputTextarea rows="3" [(ngModel)]="current.address" class="w-full"></textarea>
+      </div>
+      <div class="col-span-12">
+        <label class="block text-sm font-semibold mb-1">Representative (sales)</label>
+        <select class="w-full p-2 border rounded" [(ngModel)]="current.representative">
+          <option value="">-- None --</option>
+          <option *ngFor="let s of salesUsers" [value]="s.value">{{s.label}}</option>
+        </select>
       </div>
 
       <div class="col-span-12 flex items-center gap-3 mt-2">

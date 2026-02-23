@@ -83,7 +83,7 @@ export class Login {
 
     login() {
         this.auth.login(this.email, this.password).subscribe({
-            next: () => this.router.navigate(['/']),
+            next: () => this.router.navigate(['/pages/dashboard']),
             error: (err) => {
                 this.errorMessage = (err?.message) ? err.message : 'Giriş başarısız';
                 this.errorDialog = true;

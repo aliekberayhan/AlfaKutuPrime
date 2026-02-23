@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -29,8 +29,17 @@ export class SalesOrdersComponent implements OnInit {
     return o.items.reduce((s, i) => s + i.qty * i.price, 0);
   }
 
+  // return enriched orders with a computed total field for table sorting
+  enrichedOrders = computed(() => this.orders().map(o => ({ ...o, total: this.calcTotal(o) })));
+
+  getOrders() {
+    return this.enrichedOrders();
+  }
+
   view(o: Order) {
-    this.selected = o;
+    // find original order object by id to ensure selected has full original reference
+    const orig = this.orders().find(x => x.id === o.id);
+    this.selected = orig ?? (o as Order);
     this.dialog = true;
   }
 

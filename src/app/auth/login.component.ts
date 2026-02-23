@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,12 +16,13 @@ import { AuthService } from './auth.service';
   `
 })
 export class LoginComponent {
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private router: Router) {}
   login(user: string, pass: string) {
     this.auth.login(user, pass).subscribe({
-      next: res => {
-        this.auth.setToken((res as any).token);
-        window.location.reload();
+      next: _res => {
+        // AuthService.login already sets current user and localStorage.
+        // Navigate to app root (dashboard) on success.
+        this.router.navigate(['/']);
       },
       error: err => alert('Login failed')
     });

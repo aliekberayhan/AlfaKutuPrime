@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
+import { SelectModule } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToolbarModule } from 'primeng/toolbar';
 import { OrdersService, Order } from '../service/orders.service';
@@ -11,7 +12,7 @@ import { OrdersService, Order } from '../service/orders.service';
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, ChartModule, MultiSelectModule, ToolbarModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, ChartModule, SelectModule, MultiSelectModule, ToolbarModule],
   templateUrl: './reports.component.html',
 })
 export class ReportsComponent implements OnInit {
@@ -21,9 +22,10 @@ export class ReportsComponent implements OnInit {
   products: any[] = [];
   filterCustomers: string[] = [];
   filterProducts: string[] = [];
-  filterStatus: string | null = 'Shipped';
-  periods = [{ label: '12 months', value: 12 }, { label: '24 months', value: 24 }, { label: '60 months', value: 60 }];
-  filterPeriod = 12;
+  filterStatus: string = 'Shipped';
+  periods = [{ label: '1 month', value: 1 }, { label: '12 months', value: 12 }, { label: '24 months', value: 24 }, { label: '60 months', value: 60 }];
+  filterPeriod: number = 12;
+  statusOptions = [{ label: 'Open', value: 'Open' }, { label: 'Pending', value: 'Pending' }, { label: 'Shipped', value: 'Shipped' }, { label: 'Cancelled', value: 'Cancelled' }];
 
   
   // simple SVG chart state
@@ -63,26 +65,31 @@ export class ReportsComponent implements OnInit {
   applyFilters() {
     const now = new Date();
     const months = this.filterPeriod || 12;
-    const cutoff = new Date();
-    cutoff.setMonth(now.getMonth() - months);
 
     this.filteredOrders = this.orders.filter(o => {
       const d = new Date(o.date);
+      const cutoff = new Date();
+      cutoff.setMonth(now.getMonth() - months);
       if (d < cutoff) return false;
+
       if (this.filterCustomers && this.filterCustomers.length > 0 && !this.filterCustomers.includes(o.customer)) return false;
       if (this.filterStatus && this.filterStatus !== '' && o.status !== this.filterStatus) return false;
       if (this.filterProducts && this.filterProducts.length > 0) {
         if (!o.items.some(it => this.filterProducts.includes(it.product))) return false;
       }
       return true;
-    }).sort((a,b) => +new Date(b.date) - +new Date(a.date));
+    })
+    // attach total to each order so table sorting can work on Total column
+    .map(o => ({ ...o, total: this.calcTotal(o) as number }))
+    // default sort by date desc
+    .sort((a: any, b: any) => +new Date(b.date) - +new Date(a.date));
 
     this.updateChart();
   }
 
   updateChart() {
     // build month labels for the selected period (short labels)
-    const months = this.filterPeriod || 12;
+    const months = typeof this.filterPeriod === 'number' ? this.filterPeriod : 12;
     const labels: string[] = [];
     const counts: number[] = [];
     const now = new Date();
