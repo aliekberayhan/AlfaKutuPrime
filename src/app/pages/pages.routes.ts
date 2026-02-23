@@ -4,13 +4,12 @@ import { Crud } from './crud/crud';
 import { Empty } from './empty/empty';
 import { Fisler } from './fisler/fisler';
 import { CustomerPage } from './customer/customer';
-import { KalitePage } from './kalite/kalite';
+import { KaliteComponent } from './kalite/kalite.component';
 import { PermissionGuard } from '../auth/permission.guard';
 import { UsersComponent } from './users/users.component';
 import { RolesComponent } from './roles/roles.component';
 import { MuhasebeComponent } from './muhasebe/muhasebe.component';
 import { CustomerSampleComponent } from './customer/sample.component';
-import { KaliteComponent } from './kalite/kalite.component';
 import { CustomersComponent } from './customers/customers.component';
 
 export default [
@@ -18,7 +17,7 @@ export default [
     { path: 'crud', component: Crud },
     { path: 'fisler', component: Fisler, canActivate: [PermissionGuard], data: { permission: 'Fis.View' } },
     { path: 'customer', component: CustomerPage, canActivate: [PermissionGuard], data: { permission: 'Customer.View' } },
-    { path: 'kalite', component: KalitePage, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
+    { path: 'kalite', component: KaliteComponent, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
     { path: 'muhasebe', component: MuhasebeComponent, canActivate: [PermissionGuard], data: { permission: 'Samples.Manage' } },
     { path: 'customer-samples', component: CustomerSampleComponent, canActivate: [PermissionGuard], data: { permission: 'Samples.Create' } },
     { path: 'kalite-samples', component: KaliteComponent, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
