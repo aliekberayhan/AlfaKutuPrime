@@ -1,4 +1,16 @@
-<p-toolbar styleClass="mb-6">
+<!-- Page title area -->
+<div class="mb-6">
+  <div class="bg-white border rounded-lg p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-2xl font-extrabold text-surface-900">Customers</div>
+        <div class="text-sm text-surface-600 mt-1">Manage customer accounts and set active/passive status</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-toolbar styleClass="mb-4">
   <ng-template #start>
     <p-button label="New" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()"></p-button>
     <p-button severity="secondary" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedCustomers()"

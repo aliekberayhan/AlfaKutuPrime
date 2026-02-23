@@ -1,4 +1,16 @@
-<p-toolbar styleClass="mb-6">
+<!-- Page title -->
+<div class="mb-6">
+  <div class="bg-white border rounded-lg p-4 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-2xl font-extrabold text-surface-900">Customer Sample Requests</div>
+        <div class="text-sm text-surface-600 mt-1">Create and review customer sample requests.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-toolbar styleClass="mb-4">
   <ng-template #start>
     <p-button label="New Request" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
   </ng-template>

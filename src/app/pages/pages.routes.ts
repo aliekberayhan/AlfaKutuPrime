@@ -22,6 +22,8 @@ export default [
     { path: 'muhasebe', component: MuhasebeComponent, canActivate: [PermissionGuard], data: { permission: 'Samples.Manage' } },
     { path: 'customer-samples', component: CustomerSampleComponent, canActivate: [PermissionGuard], data: { permission: 'Samples.Create' } },
     { path: 'kalite-samples', component: KaliteComponent, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
+    { path: 'orders', loadComponent: () => import('./sales/sales-orders.component').then((m: any) => m.SalesOrdersComponent), canActivate: [PermissionGuard], data: { permission: 'Sales.View' } },
+    { path: 'reports', loadComponent: () => import('./reports/reports.component').then((m: any) => m.ReportsComponent), canActivate: [PermissionGuard], data: { permission: 'Sales.View' } },
     { path: 'roles', component: RolesComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
     { path: 'users', component: UsersComponent, canActivate: [PermissionGuard], data: { permission: 'Users.View' } },
     { path: 'customers', component: CustomersComponent, canActivate: [PermissionGuard], data: { permission: 'Customers.Manage' } },

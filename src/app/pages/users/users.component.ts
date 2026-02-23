@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ROLES } from '../../auth/static-auth.data';
 import { AuthService } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -9,6 +10,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -18,20 +20,25 @@ import { Table } from 'primeng/table';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, TableModule, ButtonModule, ToolbarModule, DialogModule, InputTextModule, MultiSelectModule, ConfirmDialogModule, InputIconModule, IconFieldModule],
+  imports: [CommonModule, FormsModule, TableModule, ButtonModule, ToolbarModule, DialogModule, InputTextModule, MultiSelectModule, ConfirmDialogModule, InputIconModule, IconFieldModule, CheckboxModule],
   providers: [ConfirmationService, MessageService],
   templateUrl: './users.component.html'
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   users: any[] = [];
   selectedUsers: any[] | null = null;
   userDialog = false;
   current: any = { userName: '', password: '', roles: [] as string[] };
   roleOptions = ROLES.map(r => ({ label: r.displayName ?? r.name, value: r.name }));
+  loggedUserName: string | null = null;
+  private sub?: Subscription;
 
   constructor(private auth: AuthService, private confirmation: ConfirmationService, private messageService: MessageService) {}
   ngOnInit(): void {
     this.auth.getUsers().subscribe(list => this.users = list);
+    this.sub = this.auth.getCurrentUser().subscribe(u => {
+      this.loggedUserName = u?.userName ?? null;
+    });
   }
 
   onGlobalFilter(table: Table, event: Event): void {
@@ -107,6 +114,19 @@ export class UsersComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Users deleted' });
       }
     });
+  }
+  onToggleActive(user: any) {
+    const updated = { ...user, active: !!user.active };
+    this.auth.updateUser(updated);
+    this.messageService.add({ severity: 'info', summary: 'Updated', detail: `${user.userName} is now ${updated.active ? 'active' : 'inactive'}` });
+    const logged = this.auth.getCurrentUserSync();
+    if (logged && logged.userName === user.userName && !updated.active) {
+      // if admin deactivated themselves, log out
+      this.auth.logout();
+    }
+  }
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 }
 

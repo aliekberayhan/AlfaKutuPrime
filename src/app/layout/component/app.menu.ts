@@ -86,6 +86,22 @@ export class AppMenu implements OnInit, OnDestroy {
                         routerLink: ['/pages/customers'],
                         permission: 'Customers.Manage'
                     }
+                    ,
+                    {
+                        label: 'Orders',
+                        icon: 'pi pi-fw pi-shopping-cart',
+                        routerLink: ['/pages/orders'],
+                        permission: 'Sales.View'
+                    }
+                    ,
+                    // Reports moved to its own top-level section
+                ]
+            },
+            {
+                label: 'Reports',
+                icon: 'pi pi-fw pi-chart-bar',
+                items: [
+                    { label: 'Sales Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/pages/reports'], permission: 'Sales.View' }
                 ]
             },
             {

@@ -25,13 +25,14 @@ export const PERMISSIONS: string[] = [
   'Samples.View',
   'Samples.Manage',
   'Samples.Notes',
-  'Customers.Manage'
+  'Customers.Manage',
+  'Sales.View'
 ];
 
 export const ROLES: StaticRole[] = [
   { name: 'Admin', displayName: 'Administrator', permissions: PERMISSIONS.slice() },
   { name: 'Customer', displayName: 'Customer', permissions: ['Samples.Create','Samples.View'] },
-  { name: 'Satis', displayName: 'Satis', permissions: ['Samples.Manage','Samples.Notes','Customer.View','Customers.Manage'] },
+  { name: 'Satis', displayName: 'Satis', permissions: ['Samples.Manage','Samples.Notes','Customer.View','Customers.Manage','Sales.View'] },
   { name: 'Kalite', displayName: 'Kalite', permissions: ['Fis.View','Fis.Edit','Kalite.View'] },
 ];
 
