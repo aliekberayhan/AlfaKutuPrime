@@ -12,6 +12,7 @@ import { RolesComponent } from './roles/roles.component';
 import { MuhasebeComponent } from './muhasebe/muhasebe.component';
 import { CustomerSampleComponent } from './customer/sample.component';
 import { CustomersComponent } from './customers/customers.component';
+import { JiraComponent } from './jira/jira.component';
 
 export default [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -29,6 +30,7 @@ export default [
     { path: 'roles', component: RolesComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
     { path: 'users', component: UsersComponent, canActivate: [PermissionGuard], data: { permission: 'Users.View' } },
     { path: 'customers', component: CustomersComponent, canActivate: [PermissionGuard], data: { permission: 'Customers.Manage' } },
+    { path: 'jira', component: JiraComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' }  },
     { path: 'empty', component: Empty },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;
