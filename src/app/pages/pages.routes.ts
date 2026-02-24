@@ -30,7 +30,7 @@ export default [
     { path: 'roles', component: RolesComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
     { path: 'users', component: UsersComponent, canActivate: [PermissionGuard], data: { permission: 'Users.View' } },
     { path: 'customers', component: CustomersComponent, canActivate: [PermissionGuard], data: { permission: 'Customers.Manage' } },
-    { path: 'jira', component: JiraComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' }  },
+    { path: 'jira', component: JiraComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
     { path: 'empty', component: Empty },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

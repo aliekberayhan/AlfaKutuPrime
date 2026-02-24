@@ -25,7 +25,7 @@ export class AppMenu implements OnInit, OnDestroy {
     private fullModel: MenuItem[] = [];
     private sub?: Subscription;
 
-    constructor(private auth: AuthService) {}
+    constructor(private auth: AuthService) { }
 
     ngOnInit() {
         this.fullModel = [

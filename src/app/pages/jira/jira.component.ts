@@ -4,4 +4,4 @@ import { Component } from '@angular/core';
     selector: 'app-jira',
     templateUrl: './jira.component.html'
 })
-export class JiraComponent {}
+export class JiraComponent { }
