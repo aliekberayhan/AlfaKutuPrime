@@ -46,8 +46,9 @@
         <p-tag [value]="order.status" [severity]="getSeverity(order.status)"></p-tag>
       </td>
       <td>{{order.approvedBy || '-'}}</td>
-      <td>
+      <td class="flex gap-1">
         <p-button icon="pi pi-eye" (click)="view(order)"></p-button>
+        <p-button *ngIf="canDelete()" icon="pi pi-trash" severity="danger" (click)="confirmDelete(order)"></p-button>
       </td>
     </tr>
   </ng-template>
@@ -137,6 +138,7 @@
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-2">
       <p-button label="Close" icon="pi pi-times" severity="secondary" text (click)="viewDialog=false"></p-button>
+      <p-button *ngIf="canDelete()" label="Delete" icon="pi pi-trash" severity="danger" text (onClick)="confirmDelete(selected!)"></p-button>
       <p-button *ngIf="canApprove(selected!)" label="Reject" icon="pi pi-trash" severity="danger"
         (onClick)="reject()"></p-button>
       <p-button *ngIf="canApprove(selected!)" label="Approve" icon="pi pi-check" severity="success"
@@ -144,3 +146,6 @@
     </div>
   </ng-template>
 </p-dialog>
+
+<!-- confirmation dialog for deletes -->
+<p-confirmdialog [style]="{ width: '450px' }" />

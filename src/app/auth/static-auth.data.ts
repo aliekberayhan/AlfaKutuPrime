@@ -39,13 +39,14 @@ export const PERMISSIONS: string[] = [
   'Complaints.Manage',
   'Orders.Create',
   'Orders.Approve',
-  'Orders.View'
+  'Orders.View',
+  'Orders.Delete' // allows deletion of customer orders
 ];
 
 export const ROLES: StaticRole[] = [
   { name: 'Admin', displayName: 'Administrator', permissions: PERMISSIONS.slice() },
   { name: 'Customer', displayName: 'Customer', permissions: ['Samples.Create', 'Samples.View', 'Complaints.View', 'Orders.Create'] },
-  { name: 'Sales', displayName: 'Sales', permissions: ['Samples.Manage', 'Samples.Notes', 'Customer.View', 'Customers.Manage', 'Sales.View', 'Orders.Approve'] },
+  { name: 'Sales', displayName: 'Sales', permissions: ['Samples.Manage', 'Samples.Notes', 'Customer.View', 'Customers.Manage', 'Sales.View', 'Orders.Approve', 'Orders.Delete'] },
   { name: 'Quality', displayName: 'Quality', permissions: ['Fis.View', 'Fis.Edit', 'Kalite.View', 'Complaints.Manage', 'Orders.View'] },
 ];
 

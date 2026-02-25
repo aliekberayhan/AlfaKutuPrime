@@ -6,15 +6,16 @@ import { DialogModule } from 'primeng/dialog';
 import { ToolbarModule } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
 import { TagModule } from 'primeng/tag';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { CustomerOrderService, CustomerOrder } from '../service/customer-order.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-sales-orders',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, DialogModule, FormsModule, TagModule, ToolbarModule],
-  providers: [MessageService],
+  imports: [CommonModule, TableModule, ButtonModule, DialogModule, FormsModule, TagModule, ToolbarModule, ConfirmDialogModule],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './sales-orders.component.html',
 })
 export class SalesOrdersComponent implements OnInit {
@@ -23,7 +24,8 @@ export class SalesOrdersComponent implements OnInit {
   viewDialog = false;
   statusFilter: 'All' | 'Open' | 'Approved' | 'Shipped' = 'All';
 
-  constructor(private svc: CustomerOrderService, private auth: AuthService, private msg: MessageService) { }
+  constructor(private svc: CustomerOrderService, private auth: AuthService, private msg: MessageService,
+              private confirmation: ConfirmationService) { }
 
   ngOnInit(): void {
     this.svc.getAll().subscribe(list => {
@@ -65,6 +67,24 @@ export class SalesOrdersComponent implements OnInit {
     this.svc.approve(this.selected.id, me);
     this.msg.add({ severity: 'success', summary: 'Approved', detail: 'Order has been approved successfully.' });
     this.viewDialog = false;
+  }
+
+  canDelete(): boolean {
+    return this.auth.hasPermission('Orders.Delete');
+  }
+
+  confirmDelete(order: CustomerOrder) {
+    this.confirmation.confirm({
+      message: `Delete order ${order.id}?`,
+      accept: () => {
+        this.svc.delete(order.id);
+        this.msg.add({ severity: 'success', summary: 'Deleted', detail: 'Order has been removed.' });
+        if (this.selected && this.selected.id === order.id) {
+          this.viewDialog = false;
+          this.selected = undefined;
+        }
+      }
+    });
   }
 
   reject() {

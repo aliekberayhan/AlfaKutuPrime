@@ -117,4 +117,18 @@ export class CustomerOrderService {
         }
         return order || null;
     }
+
+    /**
+     * Deletes an order by id. Returns the removed order or null if not found.
+     */
+    delete(orderId: string): CustomerOrder | null {
+        const orders = this.getSnapshot();
+        const idx = orders.findIndex(o => o.id === orderId);
+        if (idx === -1) {
+            return null;
+        }
+        const [removed] = orders.splice(idx, 1);
+        this.saveOrders(orders);
+        return removed;
+    }
 }
