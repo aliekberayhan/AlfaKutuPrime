@@ -109,6 +109,27 @@ export class AppMenu implements OnInit, OnDestroy {
                     }
                     ,
                     {
+                        label: 'Customer Orders',
+                        icon: 'pi pi-fw pi-shopping-cart',
+                        routerLink: ['/pages/customer-orders'],
+                        permission: 'Orders.Create'
+                    }
+                    ,
+                    {
+                        label: 'Sales Orders',
+                        icon: 'pi pi-fw pi-check-square',
+                        routerLink: ['/pages/sales-orders'],
+                        permission: 'Orders.Approve'
+                    }
+                    ,
+                    {
+                        label: 'Quality Orders',
+                        icon: 'pi pi-fw pi-list',
+                        routerLink: ['/pages/quality-orders'],
+                        permission: 'Orders.View'
+                    }
+                    ,
+                    {
                         label: 'Jira',
                         icon: 'pi pi-fw pi-folder',
                         routerLink: ['/pages/jira'],

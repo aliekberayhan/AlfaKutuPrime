@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -6,160 +6,70 @@ import { DialogModule } from 'primeng/dialog';
 import { ToolbarModule } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
 import { TagModule } from 'primeng/tag';
-import { OrdersService, Order } from '../service/orders.service';
+import { MessageService } from 'primeng/api';
+import { CustomerOrderService, CustomerOrder } from '../service/customer-order.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-sales-orders',
   standalone: true,
   imports: [CommonModule, TableModule, ButtonModule, DialogModule, FormsModule, TagModule, ToolbarModule],
+  providers: [MessageService],
   templateUrl: './sales-orders.component.html',
 })
 export class SalesOrdersComponent implements OnInit {
-  orders = signal<Order[]>([]);
-  selected: Order | null = null;
-  dialog = false;
+  orders: CustomerOrder[] = [];
+  selected?: CustomerOrder;
+  viewDialog = false;
 
-  constructor(private svc: OrdersService) {}
+  constructor(private svc: CustomerOrderService, private auth: AuthService, private msg: MessageService) { }
 
   ngOnInit(): void {
-    this.orders.set(this.svc.getAll());
-  }
-
-  calcTotal(o: Order) {
-    return o.items.reduce((s, i) => s + i.qty * i.price, 0);
-  }
-
-  // return enriched orders with a computed total field for table sorting
-  enrichedOrders = computed(() => this.orders().map(o => ({ ...o, total: this.calcTotal(o) })));
-
-  getOrders() {
-    return this.enrichedOrders();
-  }
-
-  view(o: Order) {
-    // find original order object by id to ensure selected has full original reference
-    const orig = this.orders().find(x => x.id === o.id);
-    this.selected = orig ?? (o as Order);
-    this.dialog = true;
-  }
-
-  markShipped(o: Order) {
-    this.svc.updateStatus(o.id, 'Shipped');
-    this.orders.set(this.svc.getAll());
-  }
-  saveStatus() {
-    if (!this.selected) return;
-    this.svc.updateStatus(this.selected.id, this.selected.status);
-    this.orders.set(this.svc.getAll());
-  }
-
-  exportOrderPdf() {
-    if (!this.selected) return;
-    const o = this.selected;
-    const logo = 'https://www.alfakutu.com/wp-content/uploads/2020/01/Antet-06.01.2020-1.png';
-    const itemsHtml = o.items.map(it => `
-      <tr>
-        <td style="padding:8px;border-bottom:1px solid #eee;">${it.product}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${it.qty}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${it.price.toFixed(2)}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">${(it.qty*it.price).toFixed(2)}</td>
-      </tr>
-    `).join('');
-    const html = `<!doctype html>
-      <html>
-      <head>
-        <meta charset="utf-8" />
-        <title>Order ${o.id}</title>
-        <style>
-          body { font-family: Arial, sans-serif; color:#222; padding:24px; }
-          .header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-          .logo { max-height:60px; }
-          .title { font-size:20px; font-weight:700; margin-bottom:4px; }
-          .meta { color:#666; font-size:13px; }
-          .card { border-radius:8px; padding:12px; box-shadow:0 1px 2px rgba(0,0,0,0.04); background:#fff; }
-          table { width:100%; border-collapse:collapse; margin-top:18px; }
-          th, td { padding:10px 8px; border-bottom:1px solid #eee; }
-          th { text-align:left; background:#f7f7f7; font-weight:600; }
-          .right { text-align:right; }
-          .totals { margin-top:18px; display:flex; justify-content:flex-end; gap:12px; font-weight:700; }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div>
-            <div class="title">Order ${o.id}</div>
-            <div class="meta">${o.customer} — ${new Date(o.date).toLocaleString()}</div>
-          </div>
-          <div><img src="${logo}" class="logo" /></div>
-        </div>
-        <div class="card">
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th class="right">Qty</th>
-                <th class="right">Price</th>
-                <th class="right">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHtml}
-            </tbody>
-          </table>
-          <div class="totals">Total: ${this.calcTotal(o).toFixed(2)}</div>
-        </div>
-      </body>
-      </html>`;
-
-    const newWin = window.open('', '_blank', 'noopener,noreferrer');
-    if (!newWin) return;
-    // write and ensure print runs after resources load
-    newWin.document.open();
-    newWin.document.write(html);
-    newWin.document.close();
-
-    const tryPrint = () => {
-      try {
-        const img = newWin.document.querySelector('img.logo') as HTMLImageElement | null;
-        if (!img) {
-          // if DOM not ready yet, retry shortly
-          setTimeout(tryPrint, 150);
-          return;
-        }
-        const doPrint = () => {
-          try { newWin.focus(); newWin.print(); } catch { /* ignore */ }
-        };
-        if (img.complete) {
-          doPrint();
-        } else {
-          img.onload = doPrint;
-          // fallback in case onload never fires
-          setTimeout(doPrint, 1500);
-        }
-      } catch {
-        // if cross-window access blocked, try a delayed print
-        setTimeout(() => {
-          try { newWin.print(); } catch { /* ignore */ }
-        }, 800);
+    this.svc.getAll().subscribe(list => {
+      this.orders = list;
+      if (this.selected) {
+        const updated = list.find(i => i.id === this.selected?.id);
+        if (updated) this.selected = updated;
       }
-    };
+    });
+  }
 
-    setTimeout(tryPrint, 200);
+  view(order: CustomerOrder) {
+    this.selected = order;
+    this.viewDialog = true;
+  }
+
+  approve() {
+    if (!this.selected) return;
+    const me = this.auth.getCurrentUserSync()?.userName ?? 'sales';
+    this.svc.approve(this.selected.id, me);
+    this.msg.add({ severity: 'success', summary: 'Approved', detail: 'Order has been approved successfully.' });
+    this.viewDialog = false;
+  }
+
+  reject() {
+    if (!this.selected) return;
+    this.svc.reject(this.selected.id);
+    this.msg.add({ severity: 'info', summary: 'Rejected', detail: 'Order has been rejected.' });
+    this.viewDialog = false;
   }
 
   getSeverity(status?: string) {
     switch ((status || '').toLowerCase()) {
-      case 'open':
-        return 'info';
       case 'pending':
         return 'warn';
-      case 'shipped':
+      case 'approved':
         return 'success';
-      case 'cancelled':
+      case 'rejected':
         return 'danger';
       default:
         return 'info';
     }
   }
+
+  canApprove(order: CustomerOrder): boolean {
+    return order.status === 'Pending';
+  }
 }
+
 
