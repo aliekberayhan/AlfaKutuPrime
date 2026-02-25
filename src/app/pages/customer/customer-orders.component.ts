@@ -29,18 +29,39 @@ export class CustomerOrdersComponent implements OnInit {
     viewDialog = false;
     products = PRODUCTS;
     currentItem?: CustomerOrderItem;
+    statusFilter: 'All' | 'Open' | 'Approved' | 'Shipped' = 'All';
 
     constructor(private svc: CustomerOrderService, private auth: AuthService) { }
 
     ngOnInit(): void {
         this.svc.getAll().subscribe(list => {
             const me = this.auth.getCurrentUserSync()?.userName;
-            this.orders = list.filter(l => l.customerUser === me);
+            this.orders = this.filterOrders(list.filter(l => l.customerUser === me));
             if (this.selected) {
                 const updated = list.find(i => i.id === this.selected?.id);
                 if (updated) this.selected = updated;
             }
         });
+    }
+
+    filterOrders(list: CustomerOrder[]): CustomerOrder[] {
+        switch (this.statusFilter) {
+            case 'Open':
+                return list.filter(o => o.status === 'Pending');
+            case 'Approved':
+                return list.filter(o => o.status === 'Approved');
+            case 'Shipped':
+                return list.filter(o => o.status === 'Shipped');
+            default:
+                return list;
+        }
+    }
+
+    setStatusFilter(filter: 'All' | 'Open' | 'Approved' | 'Shipped') {
+        this.statusFilter = filter;
+        const me = this.auth.getCurrentUserSync()?.userName;
+        const allOrders = this.svc.getSnapshot().filter(l => l.customerUser === me);
+        this.orders = this.filterOrders(allOrders);
     }
 
     openNew() {
@@ -98,6 +119,8 @@ export class CustomerOrdersComponent implements OnInit {
                 return 'success';
             case 'rejected':
                 return 'danger';
+            case 'shipped':
+                return 'info';
             default:
                 return 'info';
         }

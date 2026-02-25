@@ -19,9 +19,11 @@ export interface CustomerOrder {
     id: string;
     customerUser: string;
     createdAt: string;
-    status: 'Pending' | 'Approved' | 'Rejected';
+    status: 'Pending' | 'Approved' | 'Rejected' | 'Shipped';
     approvedAt?: string;
     approvedBy?: string;
+    shippedAt?: string;
+    shippedBy?: string;
     items: CustomerOrderItem[];
     notes?: string;
 }
@@ -99,6 +101,18 @@ export class CustomerOrderService {
         const order = orders.find(o => o.id === orderId);
         if (order) {
             order.status = 'Rejected';
+            this.saveOrders(orders);
+        }
+        return order || null;
+    }
+
+    ship(orderId: string, shippedBy: string): CustomerOrder | null {
+        const orders = this.getSnapshot();
+        const order = orders.find(o => o.id === orderId);
+        if (order) {
+            order.status = 'Shipped';
+            order.shippedAt = new Date().toISOString();
+            order.shippedBy = shippedBy;
             this.saveOrders(orders);
         }
         return order || null;

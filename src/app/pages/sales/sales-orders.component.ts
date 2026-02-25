@@ -21,17 +21,37 @@ export class SalesOrdersComponent implements OnInit {
   orders: CustomerOrder[] = [];
   selected?: CustomerOrder;
   viewDialog = false;
+  statusFilter: 'All' | 'Open' | 'Approved' | 'Shipped' = 'All';
 
   constructor(private svc: CustomerOrderService, private auth: AuthService, private msg: MessageService) { }
 
   ngOnInit(): void {
     this.svc.getAll().subscribe(list => {
-      this.orders = list;
+      this.orders = this.filterOrders(list);
       if (this.selected) {
         const updated = list.find(i => i.id === this.selected?.id);
         if (updated) this.selected = updated;
       }
     });
+  }
+
+  filterOrders(list: CustomerOrder[]): CustomerOrder[] {
+    switch (this.statusFilter) {
+      case 'Open':
+        return list.filter(o => o.status === 'Pending');
+      case 'Approved':
+        return list.filter(o => o.status === 'Approved');
+      case 'Shipped':
+        return list.filter(o => o.status === 'Shipped');
+      default:
+        return list;
+    }
+  }
+
+  setStatusFilter(filter: 'All' | 'Open' | 'Approved' | 'Shipped') {
+    this.statusFilter = filter;
+    const allOrders = this.svc.getSnapshot();
+    this.orders = this.filterOrders(allOrders);
   }
 
   view(order: CustomerOrder) {
@@ -62,6 +82,8 @@ export class SalesOrdersComponent implements OnInit {
         return 'success';
       case 'rejected':
         return 'danger';
+      case 'shipped':
+        return 'info';
       default:
         return 'info';
     }

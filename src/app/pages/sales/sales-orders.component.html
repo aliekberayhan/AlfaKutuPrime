@@ -9,6 +9,21 @@
   </div>
 </div>
 
+<p-toolbar styleClass="mb-4">
+  <ng-template #center>
+    <div class="flex gap-2">
+      <p-button label="All Orders" [severity]="statusFilter === 'All' ? 'info' : 'secondary'"
+        [text]="statusFilter !== 'All'" (onClick)="setStatusFilter('All')"></p-button>
+      <p-button label="Open" [severity]="statusFilter === 'Open' ? 'warn' : 'secondary'"
+        [text]="statusFilter !== 'Open'" (onClick)="setStatusFilter('Open')"></p-button>
+      <p-button label="Approved" [severity]="statusFilter === 'Approved' ? 'success' : 'secondary'"
+        [text]="statusFilter !== 'Approved'" (onClick)="setStatusFilter('Approved')"></p-button>
+      <p-button label="Shipped" [severity]="statusFilter === 'Shipped' ? 'info' : 'secondary'"
+        [text]="statusFilter !== 'Shipped'" (onClick)="setStatusFilter('Shipped')"></p-button>
+    </div>
+  </ng-template>
+</p-toolbar>
+
 <p-table [value]="orders" [rows]="10" [paginator]="true" [rowHover]="true" dataKey="id">
   <ng-template pTemplate="header">
     <tr>

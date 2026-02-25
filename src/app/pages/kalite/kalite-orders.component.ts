@@ -6,6 +6,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TagModule } from 'primeng/tag';
 import { CustomerOrderService, CustomerOrder } from '../service/customer-order.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-kalite-orders',
@@ -17,13 +18,13 @@ export class KaliteOrdersComponent implements OnInit {
     orders: CustomerOrder[] = [];
     selected?: CustomerOrder;
     viewDialog = false;
+    statusFilter: 'All' | 'Open' | 'Approved' | 'Shipped' = 'All';
 
-    constructor(private svc: CustomerOrderService) { }
+    constructor(private svc: CustomerOrderService, private auth: AuthService) { }
 
     ngOnInit(): void {
         this.svc.getAll().subscribe(list => {
-            // Show only approved orders
-            this.orders = list.filter(o => o.status === 'Approved');
+            this.orders = this.filterOrders(list);
             if (this.selected) {
                 const updated = list.find(i => i.id === this.selected?.id);
                 if (updated) this.selected = updated;
@@ -31,9 +32,35 @@ export class KaliteOrdersComponent implements OnInit {
         });
     }
 
+    filterOrders(list: CustomerOrder[]): CustomerOrder[] {
+        switch (this.statusFilter) {
+            case 'Open':
+                return list.filter(o => o.status === 'Pending');
+            case 'Approved':
+                return list.filter(o => o.status === 'Approved');
+            case 'Shipped':
+                return list.filter(o => o.status === 'Shipped');
+            default:
+                return list;
+        }
+    }
+
+    setStatusFilter(filter: 'All' | 'Open' | 'Approved' | 'Shipped') {
+        this.statusFilter = filter;
+        const allOrders = this.svc.getSnapshot();
+        this.orders = this.filterOrders(allOrders);
+    }
+
     view(order: CustomerOrder) {
         this.selected = order;
         this.viewDialog = true;
+    }
+
+    ship() {
+        if (this.selected) {
+            const me = this.auth.getCurrentUserSync()?.userName ?? 'quality';
+            this.svc.ship(this.selected.id, me);
+        }
     }
 
     getSeverity(status?: string) {
@@ -44,6 +71,8 @@ export class KaliteOrdersComponent implements OnInit {
                 return 'success';
             case 'rejected':
                 return 'danger';
+            case 'shipped':
+                return 'info';
             default:
                 return 'info';
         }
