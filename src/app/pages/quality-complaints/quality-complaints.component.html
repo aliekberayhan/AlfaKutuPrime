@@ -1,0 +1,189 @@
+<div class="mb-6">
+    <div class="bg-white border rounded-lg p-4 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-2xl font-extrabold text-surface-900">Quality - Customer Complaints</div>
+                <div class="text-sm text-surface-600 mt-1">Review all complaints and add root cause/actions.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <p-toolbar styleClass="mb-4">
+    <ng-template #start>
+        
+    </ng-template>
+</p-toolbar> -->
+
+<p-table #dt [value]="complaints" [rows]="10" [paginator]="true" [rowHover]="true" dataKey="id">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Id</th>
+            <th>Customer</th>
+            <th>Order</th>
+            <th>Qty</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th>Resolved At</th>
+            <th>Causes</th>
+            <th>Actions</th>
+            <th>Notes</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-c>
+        <tr>
+            <td>{{c.id}}</td>
+            <td>{{c.customerUser}}</td>
+            <td>{{c.orderCode}}</td>
+            <td>{{c.quantity}}</td>
+            <td>{{c.description}}</td>
+            <td>{{c.createdAt | date:'short'}}</td>
+            <td>
+                <p-tag *ngIf="c.status === 'Open'" value="Open" severity="info"></p-tag>
+                <p-tag *ngIf="c.status === 'Resolved'" value="Resolved" severity="success"></p-tag>
+            </td>
+            <td>{{c.resolvedAt ? (c.resolvedAt | date:'short') : '-'}}</td>
+            <td>
+                {{c.analysis?.length || 0}}
+            </td>
+            <td>
+                {{countActions(c)}}
+            </td>
+            <td>{{c.notes.length}}</td>
+            <td>
+                <p-button icon="pi pi-search" class="mr-2" (click)="openAnalysis(c)"></p-button>
+            </td>
+            <td>
+                <p-button icon="pi pi-check" label="Resolve" class="p-button-text" (click)="markResolved(c)"
+                    [disabled]="c.status==='Resolved'"></p-button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- analysis dialog -->
+<p-dialog header="Complaint Analysis" [(visible)]="analysisDialog" [modal]="true"
+    [style]="{ width: '900px', maxHeight: '95vh' }">
+    <div *ngIf="selected" class="p-0">
+        <!-- Header Info Section -->
+        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border-b border-gray-200 p-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Order Code</div>
+                    <div class="text-lg font-bold text-gray-900">{{selected.orderCode}}</div>
+                </div>
+                <div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Customer</div>
+                    <div class="text-lg font-bold text-gray-900">{{selected.customerUser}}</div>
+                </div>
+                <div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Created Date</div>
+                    <div class="text-lg font-bold text-gray-900">{{selected.createdAt | date:'short'}}</div>
+                </div>
+                <div>
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</div>
+                    <div class="mt-1">
+                        <p-tag *ngIf="selected.status === 'Open'" value="Open" severity="info"></p-tag>
+                        <p-tag *ngIf="selected.status === 'Resolved'" value="Resolved" severity="success"></p-tag>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-300">
+                <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Description</div>
+                <div class="text-sm font-semibold text-gray-700 mt-1">{{selected.description}}</div>
+            </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="p-6 space-y-6">
+            <!-- Analysis Section -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="pi pi-pen-to-square text-purple-600 text-lg"></i>
+                    <h3 class="text-lg font-bold text-gray-900">Analysis & Actions</h3>
+                </div>
+                <div *ngFor="let entry of analysisEntries; let ci = index; trackBy: trackByIndex"
+                    class="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex-1">
+                            <div class="inline-block bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                Root Cause {{ci+1}}</div>
+                            <input pInputText [(ngModel)]="entry.cause" class="w-full mt-2"
+                                placeholder="Describe root cause" />
+                        </div>
+                        <p-button icon="pi pi-trash" class="p-button-text p-button-sm ml-2" (click)="removeCause(ci)"
+                            severity="danger"></p-button>
+                    </div>
+                    <div *ngIf="entry.actions && entry.actions.length" class="mt-4 pl-4 border-l-4 border-purple-500">
+                        <p class="text-xs font-bold text-gray-600 uppercase mb-2">Actions</p>
+                        <ul class="space-y-2">
+                            <li *ngFor="let act of entry.actions; let ai = index; trackBy: trackByIndex"
+                                class="flex items-center gap-2">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <input pInputText [(ngModel)]="entry.actions[ai]" class="flex-1" />
+                                <p-button icon="pi pi-trash" class="p-button-text p-button-sm"
+                                    (click)="removeAction(ci, ai)" severity="danger"></p-button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div *ngIf="!entry.actions || !entry.actions.length" class="mt-4 text-gray-500 text-sm italic">
+                        No actions added
+                    </div>
+                    <p-button label="Add action" icon="pi pi-plus" class="p-button-sm mt-3"
+                        (click)="addAction(ci)"></p-button>
+                </div>
+                <p-button label="Add root cause" icon="pi pi-plus" class="p-button-sm" (click)="addCause()"></p-button>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <i class="pi pi-comments text-amber-600 text-lg"></i>
+                    <h3 class="text-lg font-bold text-gray-900">Notes & History</h3>
+                </div>
+                <div *ngIf="selected.notes && selected.notes.length" class="space-y-2">
+                    <div *ngFor="let n of selected.notes; let i = index"
+                        class="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold text-purple-600">{{n.author}}</span>
+                                    <span
+                                        class="text-xs font-semibold text-gray-500 bg-gray-200 px-2 py-0.5 rounded">{{n.role}}</span>
+                                    <span class="text-xs text-gray-500">{{n.time | date:'short'}}</span>
+                                </div>
+                                <p class="text-gray-700 text-sm break-words">{{n.text}}</p>
+                            </div>
+                            <p-button icon="pi pi-trash" class="p-button-text p-button-sm" (click)="removeNote(i)"
+                                severity="danger"></p-button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!selected.notes || !selected.notes.length"
+                    class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center text-gray-500 text-sm">
+                    No notes yet
+                </div>
+            </div>
+
+            <!-- Add Note Section -->
+            <div class="border-t border-gray-200 pt-4">
+                <label class="block text-sm font-bold text-gray-900 mb-2">Add a New Note</label>
+                <textarea pInputTextarea rows="3" [(ngModel)]="noteText" class="w-full"
+                    placeholder="Share your analysis, findings, or updates..."></textarea>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-end gap-2">
+            <p-button label="Close" icon="pi pi-times" severity="secondary" text
+                (click)="analysisDialog=false"></p-button>
+            <p-button label="Resolve" icon="pi pi-check-circle" severity="success" (onClick)="markResolved(selected!)"
+                [disabled]="selected?.status==='Resolved'"></p-button>
+            <p-button label="Add Note" icon="pi pi-plus" severity="info" (onClick)="addNoteToSelected()"></p-button>
+            <p-button label="Save" icon="pi pi-check" (onClick)="saveAnalysis()"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>

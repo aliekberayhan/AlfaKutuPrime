@@ -95,10 +95,24 @@ export class AppMenu implements OnInit, OnDestroy {
                     }
                     ,
                     {
+                        label: 'Customer Complaints',
+                        icon: 'pi pi-fw pi-exclamation-circle',
+                        routerLink: ['/pages/customer-complaints'],
+                        permission: 'Complaints.View'
+                    }
+                    ,
+                    {
+                        label: 'Quality Complaints',
+                        icon: 'pi pi-fw pi-eye',
+                        routerLink: ['/pages/quality-complaints'],
+                        permission: 'Complaints.Manage'
+                    }
+                    ,
+                    {
                         label: 'Jira',
                         icon: 'pi pi-fw pi-folder',
                         routerLink: ['/pages/jira'],
-                        permission: 'Roles.View'
+                        permission: 'Complaints.View'
                     }
                     ,
                     // Reports moved to its own top-level section
@@ -107,6 +121,7 @@ export class AppMenu implements OnInit, OnDestroy {
             {
                 label: 'Reports',
                 icon: 'pi pi-fw pi-chart-bar',
+                permission: 'Sales.View',
                 items: [
                     { label: 'Sales Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/pages/reports'], permission: 'Sales.View' }
                 ]

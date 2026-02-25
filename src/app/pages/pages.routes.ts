@@ -13,6 +13,8 @@ import { MuhasebeComponent } from './muhasebe/muhasebe.component';
 import { CustomerSampleComponent } from './customer/sample.component';
 import { CustomersComponent } from './customers/customers.component';
 import { JiraComponent } from './jira/jira.component';
+import { CustomerComplaintsComponent } from './customer-complaints/customer-complaints.component';
+import { QualityComplaintsComponent } from './quality-complaints/quality-complaints.component';
 
 export default [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -24,7 +26,9 @@ export default [
     { path: 'kalite', component: KaliteComponent, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
     { path: 'muhasebe', component: MuhasebeComponent, canActivate: [PermissionGuard], data: { permission: 'Samples.Manage' } },
     { path: 'customer-samples', component: CustomerSampleComponent, canActivate: [PermissionGuard], data: { permission: 'Samples.Create' } },
+    { path: 'customer-complaints', component: CustomerComplaintsComponent, canActivate: [PermissionGuard], data: { permission: 'Complaints.View' } },
     { path: 'kalite-samples', component: KaliteComponent, canActivate: [PermissionGuard], data: { permission: 'Kalite.View' } },
+    { path: 'quality-complaints', component: QualityComplaintsComponent, canActivate: [PermissionGuard], data: { permission: 'Complaints.Manage' } },
     { path: 'orders', loadComponent: () => import('./sales/sales-orders.component').then((m: any) => m.SalesOrdersComponent), canActivate: [PermissionGuard], data: { permission: 'Sales.View' } },
     { path: 'reports', loadComponent: () => import('./reports/reports.component').then((m: any) => m.ReportsComponent), canActivate: [PermissionGuard], data: { permission: 'Sales.View' } },
     { path: 'roles', component: RolesComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
