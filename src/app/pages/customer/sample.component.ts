@@ -28,7 +28,7 @@ export class CustomerSampleComponent implements OnInit {
   selected?: SampleRequest;
   noteText = '';
 
-  constructor(private svc: SampleService, private auth: AuthService) {}
+  constructor(private svc: SampleService, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.svc.getAll().subscribe(list => {
@@ -63,7 +63,7 @@ export class CustomerSampleComponent implements OnInit {
   }
   addNoteToSelected() {
     if (!this.selected || !this.noteText?.trim()) return;
-    const note: SampleNote = { author: this.auth.getCurrentUserSync()?.userName ?? 'customer', text: this.noteText, time: new Date().toISOString() };
+    const note: SampleNote = { author: this.auth.getCurrentUserSync()?.userName ?? 'customer', role: 'Customer', text: this.noteText, time: new Date().toISOString() };
     this.svc.addNote(this.selected.id, note);
     this.noteText = '';
     // refresh selected reference so modal shows updated notes immediately
