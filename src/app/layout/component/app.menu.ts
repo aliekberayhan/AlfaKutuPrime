@@ -133,7 +133,7 @@ export class AppMenu implements OnInit, OnDestroy {
                         label: 'Jira',
                         icon: 'pi pi-fw pi-folder',
                         routerLink: ['/pages/jira'],
-                        permission: 'Complaints.View'
+                        permission: 'Roles.View'
                     }
                     ,
                     // Reports moved to its own top-level section
