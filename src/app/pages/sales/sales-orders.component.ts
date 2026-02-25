@@ -25,7 +25,7 @@ export class SalesOrdersComponent implements OnInit {
   statusFilter: 'All' | 'Open' | 'Approved' | 'Shipped' = 'All';
 
   constructor(private svc: CustomerOrderService, private auth: AuthService, private msg: MessageService,
-              private confirmation: ConfirmationService) { }
+    private confirmation: ConfirmationService) { }
 
   ngOnInit(): void {
     this.svc.getAll().subscribe(list => {

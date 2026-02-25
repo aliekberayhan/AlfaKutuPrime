@@ -138,7 +138,8 @@
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-2">
       <p-button label="Close" icon="pi pi-times" severity="secondary" text (click)="viewDialog=false"></p-button>
-      <p-button *ngIf="canDelete()" label="Delete" icon="pi pi-trash" severity="danger" text (onClick)="confirmDelete(selected!)"></p-button>
+      <p-button *ngIf="canDelete()" label="Delete" icon="pi pi-trash" severity="danger" text
+        (onClick)="confirmDelete(selected!)"></p-button>
       <p-button *ngIf="canApprove(selected!)" label="Reject" icon="pi pi-trash" severity="danger"
         (onClick)="reject()"></p-button>
       <p-button *ngIf="canApprove(selected!)" label="Approve" icon="pi pi-check" severity="success"
