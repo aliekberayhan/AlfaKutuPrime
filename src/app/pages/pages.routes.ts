@@ -18,6 +18,7 @@ import { QualityComplaintsComponent } from './quality-complaints/quality-complai
 import { CustomerOrdersComponent } from './customer/customer-orders.component';
 import { SalesOrdersComponent } from './sales/sales-orders.component';
 import { KaliteOrdersComponent } from './kalite/kalite-orders.component';
+import { PlanComponent } from './plan/plan.component';
 
 export default [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -37,6 +38,7 @@ export default [
     { path: 'sales-orders', component: SalesOrdersComponent, canActivate: [PermissionGuard], data: { permission: 'Orders.Approve' } },
     { path: 'orders', loadComponent: () => import('./sales/sales-orders.component').then((m: any) => m.SalesOrdersComponent), canActivate: [PermissionGuard], data: { permission: 'Sales.View' } },
     { path: 'reports', loadComponent: () => import('./reports/reports.component').then((m: any) => m.ReportsComponent), canActivate: [PermissionGuard], data: { permission: 'Sales.View' } },
+    { path: 'plan', component: PlanComponent, canActivate: [PermissionGuard], data: { permission: 'Plan.View' } },
     { path: 'roles', component: RolesComponent, canActivate: [PermissionGuard], data: { permission: 'Roles.View' } },
     { path: 'users', component: UsersComponent, canActivate: [PermissionGuard], data: { permission: 'Users.View' } },
     { path: 'customers', component: CustomersComponent, canActivate: [PermissionGuard], data: { permission: 'Customers.Manage' } },

@@ -144,7 +144,8 @@ export class AppMenu implements OnInit, OnDestroy {
                 icon: 'pi pi-fw pi-chart-bar',
                 permission: 'Sales.View',
                 items: [
-                    { label: 'Sales Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/pages/reports'], permission: 'Sales.View' }
+                    { label: 'Sales Reports', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/pages/reports'], permission: 'Sales.View' },
+                    { label: 'Plan / Excel Analiz', icon: 'pi pi-fw pi-file-excel', routerLink: ['/pages/plan'], permission: 'Plan.View' }
                 ]
             },
             {
