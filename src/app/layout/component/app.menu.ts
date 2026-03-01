@@ -75,7 +75,7 @@ export class AppMenu implements OnInit, OnDestroy {
                         permission: 'Samples.Manage'
                     },
                     {
-                        label: 'Sample Request',
+                        label: 'Quality Sample Request',
                         icon: 'pi pi-fw pi-check-circle',
                         routerLink: ['/pages/kalite-samples'],
                         permission: 'Kalite.View'
@@ -115,13 +115,13 @@ export class AppMenu implements OnInit, OnDestroy {
                         permission: 'Orders.Create'
                     }
                     ,
-                    {
-                        label: 'Sales Orders',
-                        icon: 'pi pi-fw pi-check-square',
-                        routerLink: ['/pages/sales-orders'],
-                        permission: 'Orders.Approve'
-                    }
-                    ,
+                    // {
+                    //     label: 'Sales Orders',
+                    //     icon: 'pi pi-fw pi-check-square',
+                    //     routerLink: ['/pages/sales-orders'],
+                    //     permission: 'Orders.Approve'
+                    // }
+                    // ,
                     {
                         label: 'Quality Orders',
                         icon: 'pi pi-fw pi-list',
