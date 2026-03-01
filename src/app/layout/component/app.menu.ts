@@ -120,7 +120,7 @@ export class AppMenu implements OnInit, OnDestroy {
                     //     icon: 'pi pi-fw pi-check-square',
                     //     routerLink: ['/pages/sales-orders'],
                     //     permission: 'Orders.Approve'
-                    // }
+                    // }.
                     // ,
                     {
                         label: 'Quality Orders',
